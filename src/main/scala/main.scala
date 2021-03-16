@@ -14,9 +14,8 @@ object Main extends JFXApp {
   }
 
   // timeframe for graph (days)
-  val time = 4
+  val time: Int = 4
   val unixTime: Long = Instant.now.getEpochSecond - (time * 24*60*60)
-  println(unixTime)
 
   // interval for graph (minutes)
   val interval = 5
@@ -31,7 +30,7 @@ object Main extends JFXApp {
 
   stage.scene = scene
 
-  println(data1.getData)
+  println(data1.getTimestamp)
 
   root.children = new Label("nothing here yet")
 
