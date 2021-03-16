@@ -3,8 +3,8 @@ import io.circe.Json
 import io.circe.parser.parse
 import scalaj.http.{Http, HttpResponse}
 
-class Data {
-  val response: HttpResponse[String] = Http("https://query1.finance.yahoo.com/v8/finance/chart/AAPL?interval=5m").asString
+class Data(source: String) {
+  val response: HttpResponse[String] = Http(source).asString
 
     val json: Json = parse(response.body).getOrElse(Json.Null)
 
