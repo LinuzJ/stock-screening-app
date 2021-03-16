@@ -20,7 +20,7 @@ object Main extends JFXApp {
   // interval for graph (minutes)
   val interval = 5
 
-
+  // temporary solution for creating instances of the data class
   val data1 = new Data(s"https://query1.finance.yahoo.com/v8/finance/chart/AAPL?symbol=AAPL&period1=${unixTime}&period2=9999999999&interval=${interval}m")
   val data2 = new Data(s"https://query1.finance.yahoo.com/v8/finance/chart/NOK?symbol=AAPL&period1=${unixTime}&period2=9999999999&interval=${interval}m")
   val data3 = new Data(s"https://query1.finance.yahoo.com/v8/finance/chart/AAPL?symbol=BABA&period1=${unixTime}&period2=9999999999&interval=${interval}m")
@@ -30,9 +30,8 @@ object Main extends JFXApp {
 
   stage.scene = scene
 
-  println(data1.getData)
 
-  root.children = new Label("nothing here yet")
+  root.children = new Label()
 
 }
 
