@@ -2,22 +2,23 @@ import scalafx.application.JFXApp
 import scalafx.scene.Scene
 import scalafx.scene.control.Label
 import scalafx.scene.layout.Pane
-import data.Datak
+import data.Data
 
 object Main extends JFXApp {
 
   stage = new JFXApp.PrimaryStage {
-      title.value = "Cool ass stonks graph"
+      title.value = "Data dashboard"
       width = 800
       height = 650
   }
-  val a = new Datak
+  val a = new Data
 
-  val root = new Pane //Simple pane component
-  val scene = new Scene(root) //Scene acts as a container for the scene graph
+  val root = new Pane
+  val scene = new Scene(root)
+
   stage.scene = scene
-  println(a.getResonse)
-  root.children = new Label("hej")
+
+  root.children = new Label("nothing here yet")
 
 }
 
