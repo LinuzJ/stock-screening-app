@@ -30,7 +30,7 @@ object Main extends JFXApp {
 
   stage.scene = scene
 
-  println(data1.getTimestamp)
+  println(data1.getData)
 
   root.children = new Label("nothing here yet")
 
