@@ -37,12 +37,16 @@ class Data(source: String) {
   private val close: Option[Seq[Double]] = Some(rawIndicators.get.filter(x => x._1 == "close")("close"))
   private val volume: Option[Seq[Int]] = Some(rawIndicators.get.filter(x => x._1 == "volume")("volume").map(_.toInt))
 
-  private val price = List(timestamp.get, open.get, close.get)
+  private var price: Seq[Seq[Double]] = deleteInvalid(List(timestamp.get.map(_.toDouble), open.get, close.get)).transpose
+
 
 
   // methods returning the speficic data
-  def getPriceData = price.transpose
+  def getPriceData: Seq[Seq[Double]] = price
   def getVolumeData = List(timestamp.get, volume.get).transpose
   def getResonse = response.body
 
+
+
+    private def deleteInvalid(input: Seq[Seq[Double]]): Seq[Seq[Double]] = input.filter(x => x.forall(!_.isNaN))
 }
