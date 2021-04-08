@@ -37,7 +37,7 @@ class Data(source: String) {
   // variables containing sequences with the specific prices/volume
   private val open: Option[Seq[Double]] = Some(rawIndicators.get.filter(x => x._1 == "open")("open"))
   private val close: Option[Seq[Double]] = Some(rawIndicators.get.filter(x => x._1 == "close")("close"))
-  private val volume: Option[Seq[Int]] = Some(rawIndicators.get.filter(x => x._1 == "volume")("volume").map(_.toInt))
+  private val volume: Option[Seq[Double]] = Some(rawIndicators.get.filter(x => x._1 == "volume")("volume").map(_.toInt))
 
   private var price: Seq[Seq[Double]] = deleteInvalid(List(timestamp.get.map(_.toDouble), open.get, close.get)).transpose
 
@@ -46,6 +46,7 @@ class Data(source: String) {
   // methods returning the speficic data
   def getPriceData: Seq[Seq[Double]] = price
   def getVolumeData = List(timestamp.get, volume.get).transpose
+  def getVolumeTotal: Int = volume.get.sum.toInt
   def getResonse = response.body
   def getFormatted: Seq[(String, Double)] = {
     this.price.

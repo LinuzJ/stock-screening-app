@@ -18,7 +18,7 @@ class scatter(data: Seq[(String, Data)]) {
         //  adding the data to the axis
         val plot = new ScatterChart(xAxis, yAxis)
         series.foreach(x => plot.getData.add(x))
-        plot.setPrefSize(500, 500)
+        plot.setPrefSize(500, 300)
         plot
   }
 

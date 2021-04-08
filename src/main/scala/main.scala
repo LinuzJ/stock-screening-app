@@ -4,6 +4,7 @@ import scalafx.scene.control.Label
 import scalafx.scene.layout.{FlowPane, Pane}
 import data.Data
 import charts.scatter
+import charts.pie
 
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -12,6 +13,12 @@ object Main extends JFXApp {
 
   // TODO
   // - Test for the fetching/name of stock while creating the data variable
+  // - PieChart
+  // - Column chart
+  // - Data block
+  // - Control Panel
+  // - checkboxes for which data to show in which chart
+  // - reload data
 
   // timeframe for graph (days)
   val time: Int = 2
@@ -30,7 +37,8 @@ object Main extends JFXApp {
   }
 
   // charts
-  val scatterChart = new scatter(data)
+  val scatterChart  = new scatter(data)
+  val pieChart      = new pie(data)
 
   stage = new JFXApp.PrimaryStage {
 
@@ -38,8 +46,9 @@ object Main extends JFXApp {
       val pane = new FlowPane()
 
       pane.getChildren.add(scatterChart.getChart)
+      pane.getChildren.add(pieChart.getChart)
       pane.getChildren.add(new Label("Hello"))
-      scene = new Scene(pane, 700, 700)
+      scene = new Scene(pane, 1000, 1000)
 
   }
 
