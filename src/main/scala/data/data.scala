@@ -3,6 +3,8 @@ import io.circe.{Decoder, HCursor, Json}
 import io.circe.parser.parse
 import scalaj.http.{Http, HttpResponse}
 
+import java.text.SimpleDateFormat
+
 
 class Data(source: String) {
 
@@ -39,14 +41,19 @@ class Data(source: String) {
 
   private var price: Seq[Seq[Double]] = deleteInvalid(List(timestamp.get.map(_.toDouble), open.get, close.get)).transpose
 
-
+  val timeFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss")
 
   // methods returning the speficic data
   def getPriceData: Seq[Seq[Double]] = price
   def getVolumeData = List(timestamp.get, volume.get).transpose
   def getResonse = response.body
+  def getFormatted: Seq[(String, Double)] = {
+    this.price.
+      map(_.head).
+      map(timeFormat.format(_)) zip
+    this.price.map(_(1))
+  }
 
-
-
-    private def deleteInvalid(input: Seq[Seq[Double]]): Seq[Seq[Double]] = input.filter(x => x.forall(!_.isNaN))
+  // helper funtion to filter out invalid or dirty data
+  private def deleteInvalid(input: Seq[Seq[Double]]): Seq[Seq[Double]] = input.filter(x => x.forall(!_.isNaN))
 }
