@@ -1,7 +1,7 @@
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
 import scalafx.scene.control.Label
-import scalafx.scene.layout.Pane
+import scalafx.scene.layout.{FlowPane, Pane}
 import data.Data
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{CategoryAxis, NumberAxis, ScatterChart, XYChart}
@@ -29,25 +29,34 @@ object Main extends JFXApp {
   var X                 = data1.getPriceData.map(_.head)
   val Y                 = data1.getPriceData.map(_(1))
   val X_head            = X.head
-  val X_formatted = X.map(_ - X_head).map(timeFormat.format(_))
+  val X_formatted = X.map(timeFormat.format(_))
 
-  val wrapper           = X_formatted zip Y
+  val zipped           = X_formatted zip Y
 
   stage = new JFXApp.PrimaryStage {
       title.value = "Data dashboard"
-      scene = new Scene(700, 700) {
+      val pane = new FlowPane()
+      pane.getChildren.add(createScatterChart(zipped))
+      scene = new Scene(pane, 700, 700)
+
+  }
+  def createScatterChart(data: Seq[(String, Double)]): ScatterChart[String, Number] = {
         val xAxis = CategoryAxis()
         val yAxis = NumberAxis()
+        xAxis.setLabel("Time")
+        yAxis.setLabel("Close price")
 
+        // setting up the data itself in a chart-readable format
         val Data = XYChart.Series[String, Number](
-          "Data",
-          ObservableBuffer(wrapper.map(i => XYChart.Data[String, Number](i._1, i._2)): _*))
-        val plot = new ScatterChart(xAxis, yAxis)
-        plot.getData().add(Data)
-        root     = plot
-      }
-  }
+          "Price over time",
+          ObservableBuffer(zipped.map(i => XYChart.Data[String, Number](i._1, i._2)): _*))
 
+        //  adding the data to the axis
+        val plot = new ScatterChart(xAxis, yAxis)
+        plot.getData.add(Data)
+        plot.setPrefSize(400, 400)
+        plot
+  }
 
 
 //  val root = new Pane
