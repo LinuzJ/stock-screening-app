@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 
 
 class Data(source: String) {
-
+  println(source)
   // fetches the raw data from the origin
   private val response: HttpResponse[String] = Http(source).asString
 
@@ -41,13 +41,17 @@ class Data(source: String) {
 
   private var price: Seq[Seq[Double]] = deleteInvalid(List(timestamp.get.map(_.toDouble), open.get, close.get)).transpose
 
-  val timeFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss")
+  val timeFormat = new SimpleDateFormat("HH:mm:ss")
 
   // methods returning the speficic data
   def getPriceData: Seq[Seq[Double]] = price
+
   def getVolumeData = List(timestamp.get, volume.get).transpose
+
   def getVolumeTotal: Int = volume.get.sum.toInt
+
   def getResonse = response.body
+
   def getFormatted: Seq[(String, Double)] = {
     this.price.
       map(_.head).

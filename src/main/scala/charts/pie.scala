@@ -7,9 +7,11 @@ import scalafx.scene.chart.PieChart
 import scalafx.scene.control.Label
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.paint.Color
+import scalafx.scene.layout.{GridPane}
+import scalafx.scene.control.CheckBox
 
+class Pie(inputData: Seq[(String, Data)]) {
 
-class pie(inputData: Seq[(String, Data)]) {
 
     // creation of the chart
     private val chart: PieChart = {
@@ -76,10 +78,12 @@ class pie(inputData: Seq[(String, Data)]) {
 //        }
 //      })
 //    }
-    for (i <- 0 to 10) {
-      println("hej")
-    }
 
     // method to get the pieChart
-    def getChart: PieChart = chart
+    private def createChart: PieChart = chart
+
+    val getChart: GridPane = new GridPane()
+    getChart.add(createChart, 0, 0)
+    getChart.add(new CheckBox("TestBox"), 0, 1)
+    getChart.add(new CheckBox("TexMexBox"), 1, 1)
 }
