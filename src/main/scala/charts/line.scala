@@ -6,7 +6,7 @@ import scalafx.scene.chart.{CategoryAxis, LineChart, NumberAxis, ScatterChart, X
 
 class Line(data: Seq[(String, Data)]) {
 
-  val getChart: LineChart[String, Number] = createChart(data)
+  def getChart: LineChart[String, Number] = createChart(data)
 
   private def createChart(data: Seq[(String, Data)]): LineChart[String, Number] = {
         val xAxis = CategoryAxis()

@@ -14,7 +14,7 @@ class Pie(inputData: Seq[(String, Data)]) {
 
 
     // creation of the chart
-    private val chart: PieChart = {
+    private def chart: PieChart = {
       val product = new PieChart {
       title = "Total Volume"
       data = ObservableBuffer(inputData.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))

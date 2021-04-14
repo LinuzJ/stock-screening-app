@@ -5,6 +5,7 @@ import scalafx.scene.layout.{FlowPane, GridPane, Pane}
 import data.Data
 import charts.Line
 import charts.Pie
+import charts.Bar
 
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -25,7 +26,7 @@ object Main extends JFXApp {
   // interval for graph (minutes) Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
   val interval = 30
   // here you choose which stocks to monitor
-  val stocks: Seq[String] = List("AAPL", "GME")
+  val stocks: Seq[String] = List("NOK", "GME")
 
 
   // The fetched data is stored here
@@ -38,6 +39,8 @@ object Main extends JFXApp {
   // charts
   val scatterChart  = new Line(data)
   val pieChart      = new Pie(data)
+  val barChart      = new Bar(data)
+
 
   stage = new JFXApp.PrimaryStage {
 

@@ -46,7 +46,7 @@ class Data(source: String) {
   // methods returning the speficic data
   def getPriceData: Seq[Seq[Double]] = price
 
-  def getVolumeData = List(timestamp.get, volume.get).transpose
+  def getVolumeData: Seq[Tuple2[Int, Double]] = timestamp.get zip volume.get
 
   def getVolumeTotal: Int = volume.get.sum.toInt
 
