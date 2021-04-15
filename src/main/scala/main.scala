@@ -49,7 +49,7 @@ object Main extends JFXApp {
 
       pane.add(scatterChart.getChart, 0, 0)
       pane.add(pieChart.getChart, 1, 0)
-      pane.add(new Label("Hello"), 0, 1)
+      pane.add(barChart.getChart, 0, 1)
       scene = new Scene(pane, 1000, 1000)
 
   }
