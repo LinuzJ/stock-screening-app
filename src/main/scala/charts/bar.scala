@@ -4,13 +4,19 @@ import data.Data
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{BarChart, CategoryAxis, NumberAxis, StackedBarChart, XYChart}
 
-class Bar(inputData: Seq[(String, Data)]) {
+class Bar(inputData: Seq[(String, Data)]) extends Chart {
 
   private var barAmount: Int = 6
 
   def changebarAmount(changeTo: Int) = barAmount = changeTo
 
-  def getChart: StackedBarChart[String, Number] = createChart(inputData, barAmount)
+  def getChart: StackedBarChart[String, Number] = thisChart
+
+  // method to update the chart
+  override def update(newData: Seq[(String, Data)]): Unit = { thisChart = createChart(newData, barAmount) }
+
+  private var thisChart: StackedBarChart[String, Number] = createChart(inputData, barAmount)
+
 
   private def createChart(input: Seq[(String, Data)], bars: Int): StackedBarChart[String, Number] = {
 
@@ -71,7 +77,7 @@ class Bar(inputData: Seq[(String, Data)]) {
   }
 
   private def getTimePeriods(input: (String, Data), barAmount: Int): Seq[String] = {
-    val timeData: Seq[String] = input._2.getFormatted.map(_._1)
+    val timeData: Seq[String] = input._2.getVolumeData.map(_._1)
     val groupSize: Int = timeData.length / barAmount
     val grouped: Seq[Seq[String]] = timeData.grouped(groupSize).toList
     grouped.map{
@@ -81,7 +87,7 @@ class Bar(inputData: Seq[(String, Data)]) {
     }
   }
   private def getVolumePeriods(input: (String, Data), barAmount: Int): Seq[Int] = {
-    val timeData: Seq[Double] = input._2.getFormatted.map(_._2)
+    val timeData: Seq[Double] = input._2.getVolumeData.map(_._2)
     val grouped: Seq[Seq[Double]] = timeData.grouped(barAmount).toList
     grouped.map(x => x.sum.toInt)
   }

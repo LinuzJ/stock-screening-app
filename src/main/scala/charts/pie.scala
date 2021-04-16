@@ -10,15 +10,19 @@ import scalafx.scene.paint.Color
 import scalafx.scene.layout.{GridPane}
 import scalafx.scene.control.CheckBox
 
-class Pie(inputData: Seq[(String, Data)]) {
+class Pie(inputData: Seq[(String, Data)]) extends Chart {
 
+  // method to get the pieChart
+  def getChart: PieChart = thisChart
 
-    // creation of the chart
-    private def chart: PieChart = {
-      val product = new PieChart {
-      title = "Total Volume"
-      data = ObservableBuffer(inputData.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))
-      }
+  private var thisChart: PieChart = createChart(inputData)
+
+  // creation of the chart
+  private def createChart(input: Seq[(String, Data)]): PieChart = {
+    val product = new PieChart {
+    title = "Total Volume"
+    data = ObservableBuffer(input.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))
+    }
 
 //      // interactive
 //      var label: Label = new Label()
@@ -78,12 +82,7 @@ class Pie(inputData: Seq[(String, Data)]) {
 //        }
 //      })
 //    }
+  // method to update the chart
+  override def update(newData: Seq[(String, Data)]): Unit = { thisChart = createChart(newData) }
 
-    // method to get the pieChart
-    private def createChart: PieChart = chart
-
-    val getChart: GridPane = new GridPane()
-    getChart.add(createChart, 0, 0)
-    getChart.add(new CheckBox("TestBox"), 0, 1)
-    getChart.add(new CheckBox("TexMexBox"), 1, 1)
 }

@@ -24,11 +24,11 @@ object Main extends JFXApp {
   // - reload data
 
   // timeframe for graph
-  val time: Int = 20
+  val time: Int = 10
   // interval for graph (minutes) Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
   val interval = 30
   // here you choose which stocks to monitor
-  val stocks: Seq[String] = List("COIN", "GME")
+  val stocks: Seq[String] = List("AAPL", "GME", "AMZN")
 
 
   // The fetched data is stored here
@@ -39,7 +39,7 @@ object Main extends JFXApp {
   }
 
   // charts
-  val scatterChart  = new Line(data)
+  val LineChart  = new Line(data)
   val pieChart      = new Pie(data)
   val barChart      = new Bar(data)
 
@@ -49,9 +49,9 @@ object Main extends JFXApp {
       title.value = "Data dashboard"
       val pane = new GridPane
 
-      pane.add(scatterChart.getChart, 0, 0)
-      pane.add(pieChart.getChart, 1, 0)
-      pane.add(barChart.getChart, 0, 1)
+      pane.add(LineChart.getPane, 0, 0)
+      pane.add(pieChart.getPane, 1, 0)
+      pane.add(barChart.getPane, 0, 1)
       scene = new Scene(pane, 1000, 1000)
 
   }

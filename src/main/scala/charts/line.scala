@@ -4,9 +4,12 @@ import data.Data
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{CategoryAxis, LineChart, NumberAxis, ScatterChart, XYChart}
 
-class Line(data: Seq[(String, Data)]) {
+class Line(data: Seq[(String, Data)]) extends Chart {
 
-  def getChart: LineChart[String, Number] = createChart(data)
+  // method to get the pieChart
+  def getChart: LineChart[String, Number] = thisChart
+
+  private var thisChart: LineChart[String, Number] = createChart(data)
 
   private def createChart(data: Seq[(String, Data)]): LineChart[String, Number] = {
         val xAxis = CategoryAxis()
@@ -33,4 +36,6 @@ class Line(data: Seq[(String, Data)]) {
     }
 
   }
+  // method to update the chart
+  override def update(newData: Seq[(String, Data)]): Unit = { thisChart = createChart(newData) }
 }
