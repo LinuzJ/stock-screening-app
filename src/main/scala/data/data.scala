@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat
 
 
 class Data(source: String) {
-  println(source)
   // fetches the raw data from the origin
   private val response: HttpResponse[String] = Http(source).asString
 

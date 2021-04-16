@@ -15,7 +15,9 @@ object Main extends JFXApp {
   // TODO
   // - Test for the fetching/name of stock while creating the data variable
   // - PieChart
-  // - Column chart
+  //    - interactivity
+  // - Bar chart
+  //    - make it actually work, and interactivity!!!
   // - Data block
   // - Control Panel
   // - checkboxes for which data to show in which chart, aka a pane under the charts with relevant buttons
@@ -26,7 +28,7 @@ object Main extends JFXApp {
   // interval for graph (minutes) Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
   val interval = 30
   // here you choose which stocks to monitor
-  val stocks: Seq[String] = List("NOK", "GME")
+  val stocks: Seq[String] = List("COIN", "GME")
 
 
   // The fetched data is stored here
