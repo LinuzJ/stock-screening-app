@@ -8,8 +8,7 @@ class Bar(inputData: Seq[(String, Data)]) extends Chart {
 
   private var barAmount: Int = 6
 
-  def changebarAmount(changeTo: Int) = barAmount = changeTo
-
+  def changebarAmount(changeTo: Int) = { barAmount = changeTo }
   def getChart: StackedBarChart[String, Number] = thisChart
 
   // method to update the chart
