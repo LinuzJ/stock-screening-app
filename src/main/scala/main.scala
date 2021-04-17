@@ -1,11 +1,13 @@
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, Label, SplitPane}
-import scalafx.scene.layout.{BorderPane, GridPane, Pane}
+import scalafx.scene.layout.{BorderPane, GridPane, Pane, VBox}
 import data.Data
+import data.DataPane
 import charts.Line
 import charts.Pie
 import charts.Bar
+import scalafx.scene.input.KeyCode.V
 
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -51,53 +53,111 @@ object Main extends JFXApp {
   val barChart      = new Bar(buildData(stocks))
   val listOfCharts: Seq[charts.Chart] = List(lineChart, pieChart, barChart)
 
+  // dataPane
+  val dataPane      = new DataPane(buildData(stocks))
 
-  val button = new Button("Update *TEST*")
 
-  button.onAction = (e) => {
+  val button1 = new Button("Update *TEST*")
+  button1.getStyleClass.add("test")
+
+  button1.onAction = (e) => {
     // FOT THE SAKE OF THE TEST CHANGE THE STOCKS TO THIS
     changeStocks(List("AAPL", "GME", "NOK"))
     for (chart <- listOfCharts) {
       chart.update(buildData(stocks))
     }
-    updateStage()
+    updateStage(true)
+  }
+
+  val buttonToSetup = new Button{
+    text = "Switch scenes lol"
+    onAction = (e) => updateStage(false)
+  }
+
+  val buttonToDashboard = new Button{
+    text = "Switch scenes lol"
+    onAction = (e) => updateStage(true)
   }
 
 
-  def newStage: JFXApp.PrimaryStage = {
+
+  def StockStage: JFXApp.PrimaryStage = {
     new JFXApp.PrimaryStage {
 
       title.value = "Data dashboard"
       val pane = new BorderPane()
-      val splitLeft = new SplitPane()
-      splitLeft.items.add(lineChart.getPane)
-      splitLeft.items.add(barChart.getPane)
-      splitLeft.orientation = scalafx.geometry.Orientation.Vertical
-      val splitRight = new SplitPane()
-      splitRight.items.add(pieChart.getPane)
-      splitRight.items.add(button)
-      splitRight.orientation = scalafx.geometry.Orientation.Vertical
 
+      ////////////////////////////////
+      val splitLeft = new SplitPane()
+      splitLeft.items.add{
+        val temp = new BorderPane()
+        temp.setCenter(lineChart.getPane)
+        temp
+      }
+      splitLeft.items.add{
+        val temp = new BorderPane()
+        temp.setCenter(barChart.getPane)
+        temp
+      }
+      splitLeft.orientation = scalafx.geometry.Orientation.Vertical
+      ////////////////////////////////
+
+      ////////////////////////////////
+      val splitRight = new SplitPane()
+      //--------------------------------
+      val splitRigthTop = new BorderPane()
+      splitRigthTop.children.add(pieChart.getPane)
+      //--------------------------------
+      val splitRightBottom = new SplitPane()
+      splitRightBottom.items.add{
+        val temp = new BorderPane()
+        temp.setCenter(dataPane.getPane)
+        temp
+      }
+      splitRightBottom.items.add{
+        val temp = new BorderPane()
+        temp.setTop(buttonToSetup)
+        temp.setBottom(button1)
+        temp
+      }
+      splitRightBottom.orientation = scalafx.geometry.Orientation.Vertical
+      //--------------------------------
+      splitRight.items.add(splitRigthTop)
+      splitRight.items.add(splitRightBottom)
+      splitRight.orientation = scalafx.geometry.Orientation.Vertical
+      ////////////////////////////////
+
+      ////////////////////////////////
       val splitCenter = new SplitPane()
       splitCenter.items.add(splitLeft)
       splitCenter.items.add(splitRight)
       splitCenter.orientation = scalafx.geometry.Orientation.Horizontal
+      ////////////////////////////////
 
       pane.setCenter(splitCenter)
-//      pane.add(lineChart.getPane, 0, 0)
-//      pane.add(pieChart.getPane, 1, 0)
-//      pane.add(barChart.getPane, 0, 1)
-//      pane.add(button, 1, 1)
-      scene = new Scene(pane, 1000, 1000)
+      scene = new Scene(pane, 1200, 1000) {
+        stylesheets = List(getClass.getResource("style.css").toExternalForm)
+      }
 
     }
   }
+  def SetupStage: JFXApp.PrimaryStage = {
+    new JFXApp.PrimaryStage {
+      title.value = "Setup"
+      val pane = new BorderPane()
+      val splitCenter = new SplitPane()
+      splitCenter.items.add(new Label("Test"))
+      splitCenter.items.add(buttonToDashboard)
+      pane.setCenter(splitCenter)
 
-  var stageVariable: JFXApp.PrimaryStage = newStage
-  def updateStage(): Unit = { stageVariable = newStage }
+      scene = new Scene(pane, 1000, 1000)
+    }
+  }
+
+  // stage initially set to the SetupStage
+  var stageVariable: JFXApp.PrimaryStage = SetupStage
+  def updateStage(input: Boolean): Unit = { if (input) {stageVariable = StockStage} else {stageVariable = SetupStage} }
 
   stage = stageVariable
-
-
 }
 

@@ -15,12 +15,12 @@ class Line(data: Seq[(String, Data)]) extends Chart {
         val xAxis = CategoryAxis()
         val yAxis = NumberAxis()
         xAxis.setLabel("Time")
-        yAxis.setLabel("Close price")
-
+        yAxis.setLabel("Price")
         val series = createSeries(data)
         //  adding the data to the axis
         val plot = new LineChart(xAxis, yAxis)
         series.foreach(x => plot.getData.add(x))
+        plot.setTitle("Price over time")
         plot
   }
 

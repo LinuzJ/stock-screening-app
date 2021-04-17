@@ -2,7 +2,7 @@ package charts
 
 import data.Data
 import scalafx.scene.control.CheckBox
-import scalafx.scene.layout.GridPane
+import scalafx.scene.layout.{FlowPane, GridPane, VBox}
 
 abstract class Chart {
   //  This is an abstract class for all of the charts
@@ -11,11 +11,9 @@ abstract class Chart {
   def getChart: scalafx.scene.chart.Chart
 
   // This creates a gridPane that will be used in the final display
-  def getPane: GridPane = {
-      val pane = new GridPane()
-      pane.add(getChart, 0, 0)
-      pane.add(new CheckBox("TestBox"), 0, 1)
-      pane.add(new CheckBox("TexMexBox"), 1, 1)
+  def getPane: FlowPane = {
+      val pane = new FlowPane()
+      pane.children.add(getChart)
       pane
     }
 

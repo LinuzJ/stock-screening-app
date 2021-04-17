@@ -30,6 +30,7 @@ class Bar(inputData: Seq[(String, Data)]) extends Chart {
 
     // Create the chart instance
     val barChart: StackedBarChart[String, Number] = new StackedBarChart[String, Number](xAxis, yAxis)
+    barChart.setTitle("Volume over specific timeperiod")
 
     var series: Seq[XYChart.Series[String, Number]] = Seq()
     for (i <- 0 to barAmount) {

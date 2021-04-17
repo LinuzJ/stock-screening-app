@@ -23,7 +23,6 @@ class Pie(inputData: Seq[(String, Data)]) extends Chart {
     title = "Total Volume"
     data = ObservableBuffer(input.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))
     }
-
 //      // interactive
 //      var label: Label = new Label()
 //      label.setTextFill(Color.Burlywood)
@@ -51,8 +50,7 @@ class Pie(inputData: Seq[(String, Data)]) extends Chart {
 //          }
 //        })
 //      }
-
-      product.setPrefSize(300, 300)
+      product.setTitle("Total volume over time")
       product
     }
 //
