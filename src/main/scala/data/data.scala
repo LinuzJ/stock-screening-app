@@ -4,6 +4,7 @@ import io.circe.parser.parse
 import scalaj.http.{Http, HttpResponse}
 
 import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class Data(source: String) {
@@ -49,12 +50,14 @@ class Data(source: String) {
 
   private var price: Seq[Seq[Double]] = deleteInvalid(List(timestamp.get.map(_.toDouble), open.get, close.get)).transpose
 
-  val timeFormat = new SimpleDateFormat("HH:mm:ss")
+  val timeFormat = new SimpleDateFormat("MMMMMMM dd - HH:mm:ss")
 
   // methods returning the speficic data
   def getPriceData: Seq[Seq[Double]] = price
 
-  def getVolumeData: Seq[Tuple2[String, Double]] = timestamp.get.map(timeFormat.format(_)) zip volume.get
+  def getVolumeData: Seq[Tuple2[String, BigInt]] = {
+    timestamp.get.map(time => timeFormat.format(new Date(time * 1000L))) zip volume.get.map(_.toLong)
+  }
 
   def getVolumeTotal: Int = volume.get.sum.toInt
 
@@ -63,10 +66,14 @@ class Data(source: String) {
   def getFormatted: Seq[(String, Double)] = {
     this.price.
       map(_.head).
-      map(timeFormat.format(_)) zip
+      map(time => {
+        val tempTime = new Date(time.toInt * 1000L)
+        timeFormat.format(tempTime)
+      }) zip
     this.price.map(_(1))
   }
 
   // helper funtion to filter out invalid or dirty data
   private def deleteInvalid(input: Seq[Seq[Double]]): Seq[Seq[Double]] = input.filter(x => x.forall(!_.isNaN))
+
 }

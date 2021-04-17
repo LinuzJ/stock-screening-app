@@ -6,26 +6,23 @@ import scalafx.scene.chart.{BarChart, CategoryAxis, NumberAxis, StackedBarChart,
 
 class Bar(inputData: Seq[(String, Data)]) extends Chart {
 
-  private var barAmount: Int = 6
-
-  def changebarAmount(changeTo: Int) = { barAmount = changeTo }
   def getChart: StackedBarChart[String, Number] = thisChart
 
   // method to update the chart
-  override def update(newData: Seq[(String, Data)]): Unit = { thisChart = createChart(newData, barAmount) }
+  override def update(newData: Seq[(String, Data)]): Unit = { thisChart = createChart(newData) }
 
-  private var thisChart: StackedBarChart[String, Number] = createChart(inputData, barAmount)
+  private var thisChart: StackedBarChart[String, Number] = createChart(inputData)
 
 
-  private def createChart(input: Seq[(String, Data)], bars: Int): StackedBarChart[String, Number] = {
+  private def createChart(input: Seq[(String, Data)]): StackedBarChart[String, Number] = {
 
-    val timeperiods: Seq[String] = getTimePeriods(input.head, bars)
+    val readyData: Seq[(String, Seq[(String, Number)])] = input.map(x => (x._1, x._2.getVolumeData))
 
     // Create and setup the axis
     val xAxis: CategoryAxis = new CategoryAxis()
     val yAxis: NumberAxis = new NumberAxis()
     xAxis.setLabel("Time Period")
-    xAxis.setCategories(ObservableBuffer(timeperiods))
+    xAxis.setCategories(ObservableBuffer(input.head._2.getVolumeData.map(_._1)))
     yAxis.setLabel("Volume")
 
     // Create the chart instance
@@ -33,23 +30,21 @@ class Bar(inputData: Seq[(String, Data)]) extends Chart {
     barChart.setTitle("Volume over specific timeperiod")
 
     var series: Seq[XYChart.Series[String, Number]] = Seq()
-    for (i <- 0 to barAmount) {
+    for (i <- readyData.indices) {
       series = series :+ new XYChart.Series[String, Number]()
     }
 
-    var createdData = createData(input, bars)
-    var ZipData: Seq[(XYChart.Series[String, Number], (String, Seq[(Int, Int)]))] = series zip createdData
+    var ZipData = series zip readyData
 
     for (serie <- ZipData) {
-      // (XYChart.Series[String, Number], (String, Seq[(Int, Int)]))
-
+      // (XYChart.Series[String, Number], (String, Seq[(String, Int)]))
       // set the name of the series to the name of the stock
       serie._1.setName(serie._2._1)
 
       // add the data to the specific series
       for (chartdata <- serie._2._2) {
         var newData = new XYChart.Data[String, Number]()
-        newData.setXValue(timeperiods(chartdata._1))
+        newData.setXValue(chartdata._1)
         newData.setYValue(chartdata._2)
         serie._1.getData.add(newData)
       }
@@ -63,35 +58,5 @@ class Bar(inputData: Seq[(String, Data)]) extends Chart {
 
     barChart
   }
-
-  //  helper for handling the data for the graph and setting it up ready for the chart
-  private def createData(input: Seq[(String, Data)], amountOfBars: Int): Seq[(String, Seq[(Int, Int)])] = {
-
-      var output : Seq[(String, Seq[(Int, Int)])] = Seq()
-      for (stockData <- input) {
-        var stockName = stockData._1
-        var zippedPeriods: Seq[(Int, Int)] = List.range(0, amountOfBars) zip getVolumePeriods(stockData, amountOfBars)
-        output = output :+ (stockName, zippedPeriods)
-      }
-      output
-  }
-
-  private def getTimePeriods(input: (String, Data), barAmount: Int): Seq[String] = {
-    val timeData: Seq[String] = input._2.getVolumeData.map(_._1)
-    val groupSize: Int = timeData.length / barAmount
-    val grouped: Seq[Seq[String]] = timeData.grouped(groupSize).toList
-    grouped.map{
-      subList => {
-        subList.head + " - " + subList.last
-      }
-    }
-  }
-  private def getVolumePeriods(input: (String, Data), barAmount: Int): Seq[Int] = {
-    val timeData: Seq[Double] = input._2.getVolumeData.map(_._2)
-    val grouped: Seq[Seq[Double]] = timeData.grouped(barAmount).toList
-    grouped.map(x => x.sum.toInt)
-  }
-
 }
-
 

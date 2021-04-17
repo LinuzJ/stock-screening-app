@@ -11,6 +11,7 @@ import scalafx.scene.input.KeyCode.V
 
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.util.Date
 
 object Main extends JFXApp {
 
@@ -26,7 +27,7 @@ object Main extends JFXApp {
   // - reload data
 
   // timeframe for graph
-  val time: Int = 10
+  val time: Int = 2
   // interval for graph (minutes) Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
   val interval = 30
 
@@ -40,7 +41,7 @@ object Main extends JFXApp {
   def changeStocks(input: Seq[String]): Unit = { stocks = input }
 
   // The fetched data is stored here
-  val unixTime: Long = Instant.now.getEpochSecond - (time * 24*60*60)
+  val unixTime: BigInt = Instant.now.getEpochSecond - (time * 24*60*60)
   // method for getting instances of Data for the different stocks
   def buildData(inputStocks: Seq[String]): Seq[(String, Data)] = inputStocks.map{
     x =>
@@ -109,11 +110,7 @@ object Main extends JFXApp {
       splitRigthTop.children.add(pieChart.getPane)
       //--------------------------------
       val splitRightBottom = new SplitPane()
-      splitRightBottom.items.add{
-        val temp = new BorderPane()
-        temp.setCenter(dataPane.getPane)
-        temp
-      }
+      splitRightBottom.items.add(dataPane.getPane)
       splitRightBottom.items.add{
         val temp = new BorderPane()
         temp.setTop(buttonToSetup)

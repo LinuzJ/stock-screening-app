@@ -1,7 +1,7 @@
 package data
 
 import scalafx.scene.control.Label
-import scalafx.scene.layout.{BorderPane, VBox}
+import scalafx.scene.layout.{Border, BorderPane, VBox}
 
 class DataPane(inputData: Seq[(String, Data)]) {
 
@@ -17,12 +17,16 @@ class DataPane(inputData: Seq[(String, Data)]) {
     val newPane = new BorderPane()
 
     val insidePane: VBox = new VBox()
-    val label1 = new Label("Data information 1")
-    val label2 = new Label("Data information 2")
-    val label3 = new Label("Data information 3")
-    insidePane.children.add(label1)
-    insidePane.children.add(label2)
-    insidePane.children.add(label3)
+    input.foreach{
+      stock => {
+        insidePane.children.add{
+          val temp = new Label(stock._1)
+          temp.setPrefSize(100, 100)
+          temp
+
+        }
+      }
+    }
 
     newPane.children.add(insidePane)
 
