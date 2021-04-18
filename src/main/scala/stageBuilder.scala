@@ -7,7 +7,7 @@ import scalafx.scene.layout.{BorderPane, HBox, VBox}
 
 import java.time.LocalDate
 
-class StageBuilder {
+class StageBuilder(tickers: Seq[(String, String)]) {
     // interval for graph (minutes) Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
   val interval = 60
 
@@ -33,7 +33,7 @@ class StageBuilder {
   val dataPane                        = new DataPane(stockData)
 
   // date pickers
-  var datePickerStart                  = new DatePicker(LocalDate.now.minusDays(5))
+  var datePickerStart                 = new DatePicker(LocalDate.now.minusDays(5))
   datePickerStart.onAction = (e) => {
     dates.changeDates(datePickerStart.getValue, dates.getDates("end"))
   }

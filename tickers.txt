@@ -1,7 +1,10 @@
-AAPL
-BAC
-AAPL
-AMD
-PLTR
-GE
-TSLA
+Apple-AAPL
+Bank of America-BAC
+Advanced Micre Devices (AMD)-AMD
+Palantir-PLTR
+General Electric-GE
+Tesla-TSLA
+Alibaba-BABA
+Nokia-NOK
+Wells Fargo-WFC
+American Express-AXP

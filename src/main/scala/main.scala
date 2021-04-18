@@ -14,8 +14,9 @@ object Main extends JFXApp {
   // - checkboxes for which data to show in which chart, aka a pane under the charts with relevant buttons
   // - reload data
 
+  val tickers = readTickers.fromFile("tickers.txt")
 
-  val buildStage = new StageBuilder
+  val buildStage = new StageBuilder(tickers)
   stage = buildStage.stageVariable
 
 }
