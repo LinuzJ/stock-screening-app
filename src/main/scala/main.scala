@@ -1,3 +1,4 @@
+import data.readTickers
 import scalafx.application.JFXApp
 
 

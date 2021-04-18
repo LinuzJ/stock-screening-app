@@ -1,22 +1,32 @@
-package data
+package components
 
+import data.Data
 import scalafx.scene.control.Label
-import scalafx.scene.control.ComboBox
-import scalafx.scene.layout.{Border, BorderPane, VBox}
+import scalafx.scene.layout.{BorderPane, VBox}
 
 class DataPane(inputData: Seq[(String, Data)]) {
 
+  private val initialVariable: String = {
+    try {
+      inputData.head._1
+    } catch {
+      case e: Throwable => ""
+    }
+  }
 
+  private var thisPane: BorderPane = createPane(inputData, initialVariable)
 
-  private var thisPane: BorderPane = createPane(inputData, inputData.head._1)
-
-  def update(input: Seq[(String, Data)]): Unit = { thisPane = createPane(input, input.head._1) }
+  def update(input: Seq[(String, Data)]): Unit = { thisPane = createPane(input, initialVariable) }
 
   def changeStock(input: Seq[(String, Data)], ticker: String): Unit = { thisPane = createPane(input, ticker) }
+
   def getPane: BorderPane = thisPane
 
   def createPane(input: Seq[(String, Data)], stockToDisplay: String): BorderPane = {
+
     val newPane = new BorderPane()
+
+    if (input.isEmpty) { return newPane }
 
     val insidePane: VBox = new VBox()
 

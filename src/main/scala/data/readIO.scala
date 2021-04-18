@@ -1,3 +1,5 @@
+package data
+
 import java.io._
 
 class readTickers {
@@ -25,7 +27,7 @@ class readTickers {
 
             while (oneLine != null) {
                 val split: Seq[String] = oneLine.split('-')
-                seqOfTickers = seqOfTickers :+ (split.last, split.head)
+                seqOfTickers = seqOfTickers :+ (split.head, split.last)
                 oneLine = linesIn.readLine()
               }
             seqOfTickers

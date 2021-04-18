@@ -16,6 +16,8 @@ class Bar(inputData: Seq[(String, Data)]) extends Chart {
 
   private def createChart(input: Seq[(String, Data)]): StackedBarChart[String, Number] = {
 
+    if (input.isEmpty) { return new StackedBarChart[String, Number](new CategoryAxis(), new NumberAxis()) }
+
     val readyData: Seq[(String, Seq[(String, Number)])] = input.map(x => (x._1, x._2.getVolumeData))
 
     // Create and setup the axis
