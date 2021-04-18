@@ -99,7 +99,7 @@ class StageBuilder {
       val splitRight = new SplitPane()
       //--------------------------------
       val splitRigthTop = new BorderPane()
-      splitRigthTop.children.add(pieChart.getPane)
+      splitRigthTop.setCenter(pieChart.getPane)
       //--------------------------------
       val splitRightBottom = new SplitPane()
       var splitRightBottomTop = new VBox()
