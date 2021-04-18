@@ -20,8 +20,17 @@ class DataPane(inputData: Seq[(String, Data)]) {
       val newPane = new BorderPane()
       val insidePane: VBox = new VBox()
       val mapped = input.toMap
-      insidePane.children.add(new Label("Stock: " + mapped(stockToDisplay).stock))
-      insidePane.children.add(new Label("Total Volume: " + mapped(stockToDisplay).getVolumeTotal))
+      insidePane.children.add{
+       val newButton =  new Label("Stock: " + mapped(stockToDisplay).stock)
+       newButton.getStyleClass.add("test")
+        newButton
+      }
+      insidePane.children.add{
+       val newButton =  new Label("Total Volume: " + mapped(stockToDisplay).getVolumeTotal)
+       newButton.getStyleClass.add("test")
+        newButton
+      }
+
       newPane.setCenter(insidePane)
 
       newPane

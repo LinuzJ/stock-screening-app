@@ -45,20 +45,21 @@ class StageBuilder(tickers: Seq[(String, String)]) {
     dates.changeDates(dates.getDates("start"), datePickerEnd.getValue)
   }
 
-  val button1 = new Button("Update *TEST*")
-  button1.getStyleClass.add("test")
+  
+  val updateButton = new Button("Update *TEST*")
+  updateButton.getStyleClass.add("test")
 
-  button1.onAction = (e) => {
+  updateButton.onAction = (e) => {
     updateStage()
   }
 
   val buttonToSetup = new Button{
-    text = "Switch scenes lol"
+    text = "Change stocks"
     onAction = (e) => changeStage(false)
   }
 
   val buttonToDashboard = new Button{
-    text = "Switch scenes lol"
+    text = "Continue to the dashboard"
     onAction = (e) => {
       updateStage()
       changeStage(true)
@@ -117,7 +118,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
         tempSplit.children.add(datePickerEnd)
         temp.setTop(tempSplit)
         temp.setCenter(buttonToSetup)
-        temp.setBottom(button1)
+        temp.setBottom(updateButton)
         temp
       }
       splitRightBottom.orientation = scalafx.geometry.Orientation.Vertical
@@ -141,6 +142,8 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
     }
   }
+
+
   def SetupStage: JFXApp.PrimaryStage = {
     new JFXApp.PrimaryStage {
       title.value = "Setup"
@@ -160,6 +163,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
         val tickersMap = tickers.toMap
         if (!stocks.getStocks.contains(tickersMap(tick))) {
           stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
+          changeStage(false)
         } else println("ticker already in the liost lol idiot")
       }
 
@@ -194,10 +198,16 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
   // stage initially set to the SetupStage
   var stageVariable: JFXApp.PrimaryStage = SetupStage
-  def changeStage(input: Boolean): Unit = { if (input) {
-    stageVariable = StockStage
-    dataPane.update(stockData)
-  } else {stageVariable = SetupStage} }
+
+  def changeStage(input: Boolean): Unit = {
+    if (input) {
+      stageVariable = StockStage
+      dataPane.update(stockData)
+    } else {
+      stockData = buildData(stocks.getStocks)
+      stageVariable = SetupStage
+    }
+  }
 
   def updateStage(): Unit = {
     stockData = buildData(stocks.getStocks)
