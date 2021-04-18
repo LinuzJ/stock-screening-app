@@ -8,7 +8,7 @@ import java.time.{LocalDate, LocalTime, ZoneOffset}
 import java.util.Date
 
 
-class Data(stock: String, startDate: LocalDate, endDate: LocalDate, interval: Int) {
+class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval: Int) {
 
   var source: String = s"https://query1.finance.yahoo.com/v8/finance/chart/${stock}?symbol=${stock}&period1=${startDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&period2=${endDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&interval=${interval}m"
 
@@ -19,7 +19,7 @@ class Data(stock: String, startDate: LocalDate, endDate: LocalDate, interval: In
   private val json: Json = parse(response.body).getOrElse(Json.Null)
   json match {
     case Json.Null => println("fetching failed", source)
-    case _ => println(source)
+    case _ =>
   }
   // filtering out the timestamps
   private val timestamp: Option[Seq[Int]] = json.hcursor.
@@ -48,7 +48,6 @@ class Data(stock: String, startDate: LocalDate, endDate: LocalDate, interval: In
     downField("symbol").
     as[String].
     toOption
-
 
   // variables containing sequences with the specific prices/volume
   private def open: Option[Seq[Double]] = Some(rawIndicators.get.filter(x => x._1 == "open")("open"))
