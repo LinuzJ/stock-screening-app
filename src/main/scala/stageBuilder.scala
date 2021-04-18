@@ -5,6 +5,7 @@ import scalafx.application.JFXApp
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ComboBox, DatePicker, Label, SplitPane}
 import scalafx.scene.layout.{BorderPane, HBox, VBox}
+import scalafx.Includes._
 
 import java.time.LocalDate
 
@@ -65,12 +66,13 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   }
 
 
-  val controlBox = new ControlBox(stockData.map(_._1))
-  controlBox.getBox.onAction = (e) => {
-    var dataTemp = stockData
-    dataPane.changeStock(dataTemp, controlBox.getBox.getValue)
+  var controlBox: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
+  controlBox.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
+  controlBox.onAction = (e) => {
+    dataPane.changeStock(stockData, controlBox.getValue)
     updateStage()
   }
+
 
 
 
@@ -105,7 +107,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       val splitRightBottom = new SplitPane()
       var splitRightBottomTop = new VBox()
       splitRightBottomTop.children.add(dataPane.getPane)
-      splitRightBottomTop.children.add(controlBox.getBox)
+      splitRightBottomTop.children.add(controlBox)
       splitRightBottom.items.add(splitRightBottomTop)
 
       splitRightBottom.items.add{
@@ -192,10 +194,22 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
   // stage initially set to the SetupStage
   var stageVariable: JFXApp.PrimaryStage = SetupStage
-  def changeStage(input: Boolean): Unit = { if (input) {stageVariable = StockStage} else {stageVariable = SetupStage} }
+  def changeStage(input: Boolean): Unit = { if (input) {
+    stageVariable = StockStage
+    dataPane.update(stockData)
+  } else {stageVariable = SetupStage} }
+
   def updateStage(): Unit = {
     stockData = buildData(stocks.getStocks)
-    controlBox.update(stockData.map(_._1))
+
+    controlBox = new ComboBox[String](stockData.map(_._1))
+    controlBox.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
+    controlBox.onAction = (e) => {
+    dataPane.changeStock(stockData, controlBox.getValue)
+    updateStage()
+    }
+
+
     for (chart <- listOfCharts) {
       chart.update(stockData)
     }

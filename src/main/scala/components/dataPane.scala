@@ -6,46 +6,30 @@ import scalafx.scene.layout.{BorderPane, VBox}
 
 class DataPane(inputData: Seq[(String, Data)]) {
 
-  private val initialVariable: String = {
-    try {
-      inputData.head._1
-    } catch {
-      case e: Throwable => ""
-    }
-  }
 
-  private var thisPane: BorderPane = createPane(inputData, initialVariable)
+  private var thisPane: BorderPane = createPane(inputData, { if (inputData.isEmpty) "" else inputData.head._1 })
 
-  def update(input: Seq[(String, Data)]): Unit = { thisPane = createPane(input, initialVariable) }
+  def update(input: Seq[(String, Data)]): Unit = { thisPane = createPane(input, { try { input.head._1 } catch { case e: Throwable => "" } }) }
 
   def changeStock(input: Seq[(String, Data)], ticker: String): Unit = { thisPane = createPane(input, ticker) }
 
   def getPane: BorderPane = thisPane
 
   def createPane(input: Seq[(String, Data)], stockToDisplay: String): BorderPane = {
+    try {
+      val newPane = new BorderPane()
+      val insidePane: VBox = new VBox()
+      val mapped = input.toMap
+      insidePane.children.add(new Label("Stock: " + mapped(stockToDisplay).stock))
+      insidePane.children.add(new Label("Total Volume: " + mapped(stockToDisplay).getVolumeTotal))
+      newPane.setCenter(insidePane)
 
-    val newPane = new BorderPane()
-
-    if (input.isEmpty) { return newPane }
-
-    val insidePane: VBox = new VBox()
-
-    var dataToUse: Data = {
-      var temp: Data = input.head._2
-      for (i <- input) {
-        if (i._1 == stockToDisplay) {
-          temp = i._2
-        }
+      newPane
+    } catch {
+      case e: NoSuchElementException => new BorderPane{
+        center = new Label("Failed to generate the data due to an error")
       }
-      temp
     }
-    insidePane.children.add(new Label("Stock: " + dataToUse.stock))
-    insidePane.children.add(new Label("Total Volume: " + dataToUse.getVolumeTotal))
 
-
-
-    newPane.setCenter(insidePane)
-
-    newPane
   }
 }
