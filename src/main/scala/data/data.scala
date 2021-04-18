@@ -4,16 +4,23 @@ import io.circe.parser.parse
 import scalaj.http.{Http, HttpResponse}
 
 import java.text.SimpleDateFormat
+import java.time.{LocalDate, LocalTime, ZoneOffset}
 import java.util.Date
 
 
-class Data(source: String) {
+class Data(stock: String, startDate: LocalDate, endDate: LocalDate, interval: Int) {
+
+  var source: String = s"https://query1.finance.yahoo.com/v8/finance/chart/${stock}?symbol=${stock}&period1=${startDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&period2=${endDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&interval=${interval}m"
+
   // fetches the raw data from the origin
   private val response: HttpResponse[String] = Http(source).asString
 
   // parses it into readable format for circe
   private val json: Json = parse(response.body).getOrElse(Json.Null)
-
+  json match {
+    case Json.Null => println("fetching failed", source)
+    case _ => println(source)
+  }
   // filtering out the timestamps
   private val timestamp: Option[Seq[Int]] = json.hcursor.
     downField("chart").
