@@ -1,10 +1,10 @@
 import charts.{Bar, Line, Pie}
-import components.{ControlBox, DataPane, DatesToDisplay, StocksToDisplay, tickerListPane}
+import components.{ControlBox, DataPane, DatesToDisplay, StocksToDisplay, TickerDisplayBox, tickerListPane}
 import data.Data
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ComboBox, DatePicker, Label, SplitPane}
-import scalafx.scene.layout.{BorderPane, HBox, VBox}
+import scalafx.scene.layout.{BorderPane, FlowPane, HBox, VBox}
 import scalafx.Includes._
 
 import java.time.LocalDate
@@ -130,6 +130,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
       ////////////////////////////////
       val splitCenter = new SplitPane()
+      splitCenter.dividerPositions = 0.6
       splitCenter.items.add(splitLeft)
       splitCenter.items.add(splitRight)
       splitCenter.orientation = scalafx.geometry.Orientation.Horizontal
@@ -176,7 +177,20 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       val splitRight = new SplitPane()
 
       val splitRightTop = new BorderPane()
-      splitRightTop.setCenter(new Label(stocks.toString))
+      val splitRightTopInside = new FlowPane()
+      stockData.foreach{
+        stock => {
+          val boxObject = new TickerDisplayBox(stock._1)
+          boxObject.button.onAction = (e) => {
+            stocks.changeStocks{
+              stockData.filter(x => x._1 != boxObject.label.getText).map(_._1)
+            }
+            changeStage(false)
+          }
+          splitRightTopInside.children += boxObject.getBox
+        }
+      }
+      splitRightTop.setCenter(splitRightTopInside)
 
       val splitRightBottom = new BorderPane()
       splitRightBottom.setCenter(buttonToDashboard)
@@ -192,7 +206,9 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
       pane.setCenter(splitCenter)
 
-      scene = new Scene(pane, 1000, 1000)
+      scene = new Scene(pane, 1000, 1000) {
+        stylesheets = List(getClass.getResource("style.css").toExternalForm)
+      }
     }
   }
 

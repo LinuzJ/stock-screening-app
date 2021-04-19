@@ -4,11 +4,6 @@ import data.Data
 import javafx.event.EventHandler
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.PieChart
-import scalafx.scene.control.Label
-import scalafx.scene.input.MouseEvent
-import scalafx.scene.paint.Color
-import scalafx.scene.layout.{GridPane}
-import scalafx.scene.control.CheckBox
 
 class Pie(inputData: Seq[(String, Data)]) extends Chart {
 
@@ -27,20 +22,20 @@ class Pie(inputData: Seq[(String, Data)]) extends Chart {
 //      var label: Label = new Label()
 //      label.setTextFill(Color.Burlywood)
 //      label.setStyle("-fx-font: 24 arial;")
-//
-////      product.getData.forEach{
-////        dataPoint => {
-////         dataPoint.getNode.addEventHandler(MouseEvent.MousePressed,
-////             new EventHandler[MouseEvent] {
-////               override def handle(event: MouseEvent): Unit = {
-////                label.setTranslateX(event.getSceneX)
-////                label.setTranslateY(event.getSceneY)
-////                label.setText(dataPoint.getPieValue.toString + "%")
-////               }
-////             })
-////        }
-////      }
-//
+
+//      product.getData.forEach{
+//        dataPoint => {
+//         dataPoint.getNode.addEventHandler(MouseEvent.MousePressed,
+//             new EventHandler[MouseEvent] {
+//               override def handle(event: MouseEvent): Unit = {
+//                label.setTranslateX(event.getSceneX)
+//                label.setTranslateY(event.getSceneY)
+//                label.setText(dataPoint.getPieValue.toString + "%")
+//               }
+//             })
+//        }
+//      }
+
 //      for (data <- chart.getData) {
 //        data.getNode.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler[MouseEvent]() {
 //          override def handle(e: MouseEvent): Unit = {
@@ -53,18 +48,8 @@ class Pie(inputData: Seq[(String, Data)]) extends Chart {
       product.setTitle("Total volume over time")
       product
     }
-//
-//  .setOnMouseEntered(
-//            new EventHandler[MouseEvent] {
-//               override def handle(event: MouseEvent): Unit = {
-//                label.setTranslateX(event.getSceneX)
-//                label.setTranslateY(event.getSceneY)
-//                label.setText(dataPoint.getPieValue.toString + "%")
-//               })
-//            label.setTranslateX(event)
-//            label.setTranslateY(event.getSceneY)
-//            label.setText(dataPoint.getPieValue.toString + "%")
-//         }
+
+
 
 
 
