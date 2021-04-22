@@ -160,7 +160,6 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       scene = new Scene(pane, 1200, 1000) {
         stylesheets = List(getClass.getResource("style.css").toExternalForm)
       }
-
     }
   }
 
