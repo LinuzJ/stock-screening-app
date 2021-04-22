@@ -16,3 +16,8 @@
   -fx-padding: 10;
   -fx-margin: 10;
 }
+.splitRightTopInside {
+  -fx-spacing: 20;
+  -fx-padding: 20;
+  -fx-margin: 20;
+}

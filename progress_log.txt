@@ -3,3 +3,16 @@
 
 Not much has been done. I've implemented the data parseing functionalty but have not yet started creating the data plotting classes/ objects.
 I'm going to start playing around with different ideas as soon as possible to get the graph funcionality up and runnig
+
+****************************************************
+31.3 Report
+
+Nothing has really changed. Will start to work on the project for real in the coming weeks
+
+****************************************************
+14.04 Report
+
+Since the last report I have done alot. The project is now at the stage where the functionality is son done and all that remains is some small visual and
+interactivity features.
+I have changed the plans so I now will have one setup page and one stock screener page
+There are a lot of small details that I have to figure out but having fun with the project at the moment!

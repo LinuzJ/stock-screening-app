@@ -1,26 +1,26 @@
 import charts.{Bar, Line, Pie}
-import components.{ControlBox, DataPane, DatesToDisplay, StocksToDisplay, TickerDisplayBox, tickerListPane}
-import data.Data
+import components.{ControlBox, DataPane, StocksToDisplay, TickerDisplayBox, tickerListPane}
+import data.{Data, TimeData}
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, ComboBox, DatePicker, Label, SplitPane}
+import scalafx.scene.control.{Alert, Button, ComboBox, DatePicker, Label, SplitPane}
 import scalafx.scene.layout.{BorderPane, FlowPane, HBox, VBox}
 import scalafx.Includes._
+import scalafx.scene.control.Alert.AlertType
 
 import java.time.LocalDate
 
 class StageBuilder(tickers: Seq[(String, String)]) {
 
-  // interval for graph (minutes) Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
-  val interval = 60
+
 
   val stocks: StocksToDisplay = new StocksToDisplay
-  val dates: DatesToDisplay = new DatesToDisplay
+  val dates: TimeData = new TimeData
 
   // method for getting instances of Data for the different stocks
   def buildData(inputStocks: Seq[String]): Seq[(String, Data)] = inputStocks.map{
     x =>
-    (x, new Data(x, dates.getDates("start"), dates.getDates("end"), interval))
+    (x, new Data(x, dates.getDates("start"), dates.getDates("end"), dates.getInterval))
   }
   
   var stockData: Seq[(String, Data)] = buildData(stocks.getStocks)
@@ -39,10 +39,12 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   var datePickerStart                 = new DatePicker(LocalDate.now.minusDays(5))
   datePickerStart.onAction = (e) => {
     dates.changeDates(datePickerStart.getValue, dates.getDates("end"))
+    updateStage()
   }
   var datePickerEnd                   = new DatePicker(LocalDate.now)
   datePickerEnd.onAction = (e) => {
     dates.changeDates(dates.getDates("start"), datePickerEnd.getValue)
+    updateStage()
   }
 
   
@@ -67,13 +69,29 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   }
 
 
-  var controlBox: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
-  controlBox.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
-  controlBox.onAction = (e) => {
-    dataPane.changeStock(stockData, controlBox.getValue)
+  var controlBoxStock: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
+  controlBoxStock.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
+  controlBoxStock.onAction = (e) => {
+    dataPane.changeStock(stockData, controlBoxStock.getValue)
     updateStage()
   }
-
+  val controlBoxInterval: ComboBox[String] = new ComboBox[String](List("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d",  "1wk", "1mo"))
+  controlBoxInterval.getSelectionModel.select(dates.getInterval)
+  controlBoxInterval.onAction = (e) => {
+    try {
+      dates.changeInterval(controlBoxInterval.getValue)
+    } catch {
+      case e: RuntimeException => {
+        new Alert(AlertType.Error) {
+          initOwner(stageVariable)
+          title = "Error"
+          headerText = "Error while changing Interval!"
+          contentText = e.getMessage
+        }.showAndWait()
+      }
+    }
+    updateStage()
+  }
 
 
 
@@ -108,7 +126,8 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       val splitRightBottom = new SplitPane()
       var splitRightBottomTop = new VBox()
       splitRightBottomTop.children.add(dataPane.getPane)
-      splitRightBottomTop.children.add(controlBox)
+      splitRightBottomTop.children.add(controlBoxStock)
+      splitRightBottomTop.children.add(controlBoxInterval)
       splitRightBottom.items.add(splitRightBottomTop)
 
       splitRightBottom.items.add{
@@ -178,6 +197,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
       val splitRightTop = new BorderPane()
       val splitRightTopInside = new FlowPane()
+      splitRightTopInside.getStyleClass.add("splitRightTopInside")
       stockData.foreach{
         stock => {
           val boxObject = new TickerDisplayBox(stock._1)
@@ -228,10 +248,10 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   def updateStage(): Unit = {
     stockData = buildData(stocks.getStocks)
 
-    controlBox = new ComboBox[String](stockData.map(_._1))
-    controlBox.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
-    controlBox.onAction = (e) => {
-    dataPane.changeStock(stockData, controlBox.getValue)
+    controlBoxStock = new ComboBox[String](stockData.map(_._1))
+    controlBoxStock.getSelectionModel.select({ try { controlBoxStock.getValue } catch { case e: Throwable => "" } })
+    controlBoxStock.onAction = (e) => {
+    dataPane.changeStock(stockData, controlBoxStock.getValue)
     updateStage()
     }
 

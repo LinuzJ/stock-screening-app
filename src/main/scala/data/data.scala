@@ -8,9 +8,9 @@ import java.time.{LocalDate, LocalTime, ZoneOffset}
 import java.util.Date
 
 
-class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval: Int) {
+class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval: String) {
 
-  var source: String = s"https://query1.finance.yahoo.com/v8/finance/chart/${stock}?symbol=${stock}&period1=${startDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&period2=${endDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&interval=${interval}m"
+  var source: String = s"https://query1.finance.yahoo.com/v8/finance/chart/${stock}?symbol=${stock}&period1=${startDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&period2=${endDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&interval=${interval}"
 
   // fetches the raw data from the origin
   private val response: HttpResponse[String] = Http(source).asString
