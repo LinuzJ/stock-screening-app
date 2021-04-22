@@ -1,11 +1,12 @@
 import charts.{Bar, Line, Pie}
 import components.{DataPane, ErrorPopup, StocksToDisplay, TickerDisplayBox, tickerListPane}
 import data.{Data, TimeData}
-import scalafx.application.JFXApp
+import scalafx.application.{JFXApp, Platform}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ComboBox, DatePicker, SplitPane}
 import scalafx.scene.layout.{BorderPane, FlowPane, HBox, VBox}
 import scalafx.Includes._
+
 import java.time.LocalDate
 
 class StageBuilder(tickers: Seq[(String, String)]) {
@@ -63,6 +64,12 @@ class StageBuilder(tickers: Seq[(String, String)]) {
     }
   }
 
+  val buttonExit = new Button{
+    text = "Exit"
+    onAction = (e) => {
+      Platform.exit()
+    }
+  }
 
   var controlBoxStock: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
   controlBoxStock.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
@@ -95,9 +102,9 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       ////////////////////////////////
       val splitLeft = new SplitPane()
       splitLeft.items.add{
-        val temp = new BorderPane()
-        temp.setCenter(lineChart.getPane)
-        temp
+        val i = new BorderPane()
+        i.setCenter(lineChart.getPane)
+        i
       }
       splitLeft.items.add{
         val temp = new BorderPane()
@@ -114,23 +121,27 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       splitRigthTop.setCenter(pieChart.getPane)
       //--------------------------------
       val splitRightBottom = new SplitPane()
-      var splitRightBottomTop = new VBox()
+      val splitRightBottomTop = new VBox()
+      val splitRithtBottomBottom = new BorderPane()
       splitRightBottomTop.children.add(dataPane.getPane)
       splitRightBottomTop.children.add(controlBoxStock)
       splitRightBottomTop.children.add(controlBoxInterval)
       splitRightBottom.items.add(splitRightBottomTop)
 
-      splitRightBottom.items.add{
-        val temp = new BorderPane()
-        val tempSplit = new HBox()
-        tempSplit.children.add(datePickerStart)
-        tempSplit.children.add(datePickerEnd)
-        temp.setTop(tempSplit)
-        temp.setCenter(buttonToSetup)
-        temp.setLeft(lineChart.changeTypeOfDataButton)
-        temp.setBottom(updateButton)
-        temp
-      }
+      val splitRithtBottomBottomTop = new HBox()
+      val srbbb                     = new BorderPane()
+      splitRithtBottomBottomTop.children.add(datePickerStart)
+      splitRithtBottomBottomTop.children.add(datePickerEnd)
+//      temp.setCenter(buttonToSetup)
+//      temp.setLeft(lineChart.changeTypeOfDataButton)
+//      temp.setRight(buttonExit)
+//      temp.setBottom(updateButton)
+      srbbb.setLeft{ val i = new VBox();i.children.add(buttonToSetup);i.children.add(lineChart.changeTypeOfDataButton); i}
+      srbbb.setRight{ val i = new VBox();i.children.add(buttonExit);i.children.add(updateButton); i}
+      splitRithtBottomBottom.setTop(splitRithtBottomBottomTop)
+      splitRithtBottomBottom.setBottom(srbbb)
+      splitRightBottom.items.add(splitRightBottomTop)
+      splitRightBottom.items.add(splitRithtBottomBottom)
       splitRightBottom.orientation = scalafx.geometry.Orientation.Vertical
       //--------------------------------
       splitRight.items.add(splitRigthTop)
@@ -239,7 +250,6 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
   def updateStage(): Unit = {
     stockData = buildData(stocks.getStocks)
-    println(dates.toString)
     controlBoxStock = new ComboBox[String](stockData.map(_._1))
     controlBoxStock.getSelectionModel.select({ try { controlBoxStock.getValue } catch { case e: Throwable => "" } })
     controlBoxStock.onAction = (e) => {

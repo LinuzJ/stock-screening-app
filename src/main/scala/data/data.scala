@@ -1,5 +1,5 @@
 package data
-import io.circe.{Decoder, HCursor, Json}
+import io.circe.Json
 import io.circe.parser.parse
 import scalaj.http.{Http, HttpResponse}
 
@@ -75,7 +75,8 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
     }
   }
 
-  // methods returning the speficic data
+
+  // methods returning speficic data
   def getPriceData: Seq[Seq[Double]] = price
 
   def getVolumeData: Seq[Tuple2[String, BigInt]] = {

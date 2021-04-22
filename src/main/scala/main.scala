@@ -8,8 +8,7 @@ object Main extends JFXApp {
   // - lineChart adjustability between absolute and relative data KIND OF DONE?
   // - Error handling for the data fetching
   // - Control Panel
-  // - reload data
-
+  // - TESTING ????????????????
 
   // read the tickers from setupfile
   val tickers = readTickers.fromFile("tickersConfig.txt")

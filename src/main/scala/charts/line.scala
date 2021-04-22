@@ -54,7 +54,6 @@ class Line(data: Seq[(String, Data)]) extends Chart {
   private def createSeriesAbsolute(inputData: Seq[(String, Data)]) = {
     inputData.map{
       stockData => {
-        println((stockData._1, stockData._2))
         XYChart.Series[String, Number](
         stockData._1,
         ObservableBuffer(stockData._2.getFormatted.map(i => XYChart.Data[String, Number](i._1, i._2)): _*))
