@@ -78,6 +78,18 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
       }) zip
     this.price.map(_(1))
   }
+  def getFormattedRelative: Seq[(String, Double)] = {
+    val firstValue = this.price.head.last
+    this.price.
+      map(_.head).
+      map(time => {
+        val tempTime = new Date(time.toInt * 1000L)
+        timeFormat.format(tempTime)
+      }) zip
+    this.price.map(x => {
+      ((x.last)/firstValue)
+    })
+  }
 
   // helper funtion to filter out invalid or dirty data
   private def deleteInvalid(input: Seq[Seq[Double]]): Seq[Seq[Double]] = input.filter(x => x.forall(!_.isNaN))

@@ -1,6 +1,6 @@
 Apple-AAPL
 Bank of America-BAC
-Advanced Micre Devices (AMD)-AMD
+Advanced Micro Devices (AMD)-AMD
 Palantir-PLTR
 General Electric-GE
 Tesla-TSLA
@@ -8,3 +8,14 @@ Alibaba-BABA
 Nokia-NOK
 Wells Fargo-WFC
 American Express-AXP
+Amazon-AMZN
+Microsoft-MSFT
+Nio Limited-NIO
+Nvidia-NVDA
+Moderna-MRNA
+Nikola-NKLA
+Adobe-ADBE
+Alphabeth A-GOOGL
+Cisco Inc.-CSCO
+Ebay Inc.-EBAY
+Intel Corp.-INTC

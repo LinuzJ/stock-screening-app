@@ -3,29 +3,42 @@ package charts
 import data.Data
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{CategoryAxis, LineChart, NumberAxis, ScatterChart, XYChart}
+import scalafx.scene.control.Button
+import scalafx.scene.layout.{BorderPane, VBox}
 
 class Line(data: Seq[(String, Data)]) extends Chart {
+
+  private var typeOfData: Boolean = true
+  private var currentData: Seq[(String, Data)] = data
 
   // method to get the pieChart
   def getChart: LineChart[String, Number] = thisChart
 
-  private var thisChart: LineChart[String, Number] = createChart(data)
+  private val thisChart: LineChart[String, Number] = {
+    val xAxis = CategoryAxis()
+    val yAxis = NumberAxis()
+    xAxis.setLabel("Time")
+    yAxis.setLabel("Price")
+    val series = createSeriesAbsolute(currentData)
+    //  adding the data to the axis
+    val plot = new LineChart(xAxis, yAxis)
+    series.foreach(x => plot.getData.add(x))
+    plot.setTitle(s"Price over time (${if (typeOfData) "Absolute" else "Relative"})")
+    plot
+  }
 
-  private def createChart(data: Seq[(String, Data)]): LineChart[String, Number] = {
-        val xAxis = CategoryAxis()
-        val yAxis = NumberAxis()
-        xAxis.setLabel("Time")
-        yAxis.setLabel("Price")
-        val series = createSeries(data)
-        //  adding the data to the axis
-        val plot = new LineChart(xAxis, yAxis)
-        series.foreach(x => plot.getData.add(x))
-        plot.setTitle("Price over time")
-        plot
+  private def updateChart(typeOfUpdate: Boolean): Unit = {
+    var newSeries = createSeriesAbsolute(this.currentData)
+    if (!typeOfUpdate) { newSeries = createSeriesRelative(this.currentData) }
+    thisChart.getData.remove(0, thisChart.getData.size)
+    newSeries.foreach(x => {
+      thisChart.getData.add(x)
+    })
+    thisChart.setTitle(s"Price over time (${if (typeOfData) "Absolute" else "Relative"})")
   }
 
   // helper for setting up the data itself in a chart-readable format
-  private def createSeries(inputData: Seq[(String, Data)]) = {
+  private def createSeriesAbsolute(inputData: Seq[(String, Data)]) = {
     inputData.map{
       stockData => {
         XYChart.Series[String, Number](
@@ -34,8 +47,27 @@ class Line(data: Seq[(String, Data)]) extends Chart {
 
       }
     }
+  }
+  private def createSeriesRelative(inputData: Seq[(String, Data)]) = {
+    inputData.map(x => x).map{
+      stockData => {
+        XYChart.Series[String, Number](
+        stockData._1,
+        ObservableBuffer(stockData._2.getFormattedRelative.map(i => XYChart.Data[String, Number](i._1, i._2)): _*))
 
+      }
+    }
   }
   // method to update the chart
-  override def update(newData: Seq[(String, Data)]): Unit = { thisChart = createChart(newData) }
+  override def update(newData: Seq[(String, Data)]): Unit = { currentData = newData; updateChart(typeOfData) }
+  private def changeTypeOfData(): Unit = { typeOfData = !typeOfData; updateChart(typeOfData) }
+
+  val changeTypeOfDataButton: Button = new Button{
+    text = s"Change to ${if (!typeOfData) "Absolute" else "Relative"} view"
+    onAction = (e) => {
+      changeTypeOfData()
+      text = s"Change to ${if (!typeOfData) "Absolute" else "Relative"} view"
+    }
+
+  }
 }

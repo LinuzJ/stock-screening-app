@@ -137,6 +137,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
         tempSplit.children.add(datePickerEnd)
         temp.setTop(tempSplit)
         temp.setCenter(buttonToSetup)
+        temp.setLeft(lineChart.changeTypeOfDataButton)
         temp.setBottom(updateButton)
         temp
       }
