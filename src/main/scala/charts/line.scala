@@ -2,9 +2,10 @@ package charts
 
 import data.Data
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.chart.{CategoryAxis, LineChart, NumberAxis, ScatterChart, XYChart}
-import scalafx.scene.control.Button
+import scalafx.scene.chart.{CategoryAxis, LineChart, NumberAxis, XYChart}
+import scalafx.scene.control.{Button, Tooltip}
 import scalafx.scene.layout.{BorderPane, VBox}
+import scalafx.util.Duration
 
 class Line(data: Seq[(String, Data)]) extends Chart {
 
@@ -25,6 +26,15 @@ class Line(data: Seq[(String, Data)]) extends Chart {
     val plot = new LineChart(xAxis, yAxis)
     series.foreach(x => plot.getData.add(x))
     plot.setTitle(s"Price over time (${if (typeOfData == "absolute") "Absolute" else "Relative"})")
+    plot.getData.forEach(s => {
+      s.getData.forEach(i => {
+        Tooltip.install(i.getNode, new Tooltip(s"Price\n${i.getYValue}"){
+          showDelay = Duration.Zero
+          showDuration = Duration.Indefinite
+        })
+      })
+    })
+    plot.getXAxis.setTickLabelRotation(90)
     plot
   }
 
@@ -37,8 +47,7 @@ class Line(data: Seq[(String, Data)]) extends Chart {
     })
     thisChart.setTitle(s"Price over time (${if (typeOfData == "absolute") "Absolute" else "Relative"})")
     thisChart.getYAxis.setLabel({if (typeOfData == "absolute") "Price USD" else "Relative Change"})
-    thisChart.scaleY
-    thisChart.getYAxis.setAutoRanging(true)
+    thisChart.autosize()
   }
 
   // helper for setting up the data itself in a chart-readable format

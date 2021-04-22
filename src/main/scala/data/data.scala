@@ -56,13 +56,33 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
 
   private var price: Seq[Seq[Double]] = deleteInvalid(List(timestamp.get.map(_.toDouble), open.get, close.get)).transpose
 
-  val timeFormat = new SimpleDateFormat("MMMMMMM dd - HH:mm:ss")
+  // fix the date format depending on the Interval set
+  def timeFormat: SimpleDateFormat = {
+    new SimpleDateFormat{
+      interval match {
+          case "1m"     => "HH:mm"
+          case "2m"     => "HH:mm"
+          case "5m"     => "HH:mm"
+          case "15m"    => "dd-HH:mm"
+          case "30m"    => "dd-HH:mm"
+          case "60m"    => "dd-HH:mm"
+          case "90m"    => "dd-HH:mm"
+          case "1d"     => "MMMMMMM dd"
+          case "5d"     => "MMMMMMM dd"
+          case "1wk"    => "MMMMMMM dd"
+          case "1mo"    => "MMMMMMM"
+      }
+    }
+  }
 
   // methods returning the speficic data
   def getPriceData: Seq[Seq[Double]] = price
 
   def getVolumeData: Seq[Tuple2[String, BigInt]] = {
-    timestamp.get.map(time => timeFormat.format(new Date(time * 1000L))) zip volume.get.map(_.toLong)
+    timestamp.get.map(time => {
+      val tf = timeFormat
+      tf.format(new Date(time * 1000L))
+    }) zip volume.get.map(_.toLong)
   }
 
   def getVolumeTotal: Int = volume.get.sum.toInt

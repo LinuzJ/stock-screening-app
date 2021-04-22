@@ -1,9 +1,10 @@
 package charts
 import scalafx.Includes._
 import data.Data
-import javafx.event.EventHandler
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.PieChart
+import scalafx.scene.control.Tooltip
+import scalafx.util.Duration
 
 class Pie(inputData: Seq[(String, Data)]) extends Chart {
 
@@ -18,6 +19,11 @@ class Pie(inputData: Seq[(String, Data)]) extends Chart {
     title = "Total Volume"
     data = ObservableBuffer(input.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))
     }
+    product.getData.forEach(i => {
+          val newTool = new Tooltip(s"Volume\n${i.getPieValue}"){ showDelay = Duration.Zero; showDuration = Duration.Indefinite}
+          //Tooltip.install(i.getNode, newTool)
+      }
+    )
 //      // interactive
 //      var label: Label = new Label()
 //      label.setTextFill(Color.Burlywood)

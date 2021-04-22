@@ -1,18 +1,14 @@
 import charts.{Bar, Line, Pie}
-import components.{ControlBox, DataPane, ErrorPopup, StocksToDisplay, TickerDisplayBox, tickerListPane}
+import components.{DataPane, ErrorPopup, StocksToDisplay, TickerDisplayBox, tickerListPane}
 import data.{Data, TimeData}
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
-import scalafx.scene.control.{Alert, Button, ComboBox, DatePicker, Label, SplitPane}
+import scalafx.scene.control.{Button, ComboBox, DatePicker, SplitPane}
 import scalafx.scene.layout.{BorderPane, FlowPane, HBox, VBox}
 import scalafx.Includes._
-import scalafx.scene.control.Alert.AlertType
-
 import java.time.LocalDate
 
 class StageBuilder(tickers: Seq[(String, String)]) {
-
-
 
   val stocks: StocksToDisplay = new StocksToDisplay
   val dates: TimeData = new TimeData
@@ -243,12 +239,12 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
   def updateStage(): Unit = {
     stockData = buildData(stocks.getStocks)
-
+    println(dates.toString)
     controlBoxStock = new ComboBox[String](stockData.map(_._1))
     controlBoxStock.getSelectionModel.select({ try { controlBoxStock.getValue } catch { case e: Throwable => "" } })
     controlBoxStock.onAction = (e) => {
-    dataPane.changeStock(stockData, controlBoxStock.getValue)
-    updateStage()
+      dataPane.changeStock(stockData, controlBoxStock.getValue)
+      updateStage()
     }
 
     for (chart <- listOfCharts) {
