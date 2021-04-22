@@ -76,7 +76,7 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
         val tempTime = new Date(time.toInt * 1000L)
         timeFormat.format(tempTime)
       }) zip
-    this.price.map(_(1))
+    this.price.map(_.last)
   }
   def getFormattedRelative: Seq[(String, Double)] = {
     val firstValue = this.price.head.last

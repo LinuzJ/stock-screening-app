@@ -12,7 +12,7 @@ class Line(data: Seq[(String, Data)]) extends Chart {
   private var typeOfData: String = "absolute"
   private var currentData: Seq[(String, Data)] = data
 
-  // method to get the pieChart
+  // method to get the Chart itself
   def getChart: LineChart[String, Number] = thisChart
 
   private val thisChart: LineChart[String, Number] = {
@@ -36,6 +36,9 @@ class Line(data: Seq[(String, Data)]) extends Chart {
       thisChart.getData.add(x)
     })
     thisChart.setTitle(s"Price over time (${if (typeOfData == "absolute") "Absolute" else "Relative"})")
+    thisChart.getYAxis.setLabel({if (typeOfData == "absolute") "Price USD" else "Relative Change"})
+    thisChart.scaleY
+    thisChart.getYAxis.setAutoRanging(true)
   }
 
   // helper for setting up the data itself in a chart-readable format
@@ -53,7 +56,6 @@ class Line(data: Seq[(String, Data)]) extends Chart {
   private def createSeriesRelative(inputData: Seq[(String, Data)]) = {
     inputData.map(x => x).map{
       stockData => {
-        println((stockData._1, stockData._2))
         XYChart.Series[String, Number](
         stockData._1,
         ObservableBuffer(stockData._2.getFormattedRelative.map(i => XYChart.Data[String, Number](i._1, i._2)): _*))
@@ -63,7 +65,7 @@ class Line(data: Seq[(String, Data)]) extends Chart {
   }
   // method to update the chart
   override def update(newData: Seq[(String, Data)]): Unit = { currentData = newData; updateChart(typeOfData) }
-  private def changeTypeOfData(): Unit = {
+  def changeTypeOfData(): Unit = {
     typeOfData = {if (typeOfData != "absolute") "absolute" else "relative"}
     updateChart(typeOfData)
   }
@@ -73,6 +75,7 @@ class Line(data: Seq[(String, Data)]) extends Chart {
     onAction = (e) => {
       changeTypeOfData()
       text = s"Change to ${if (typeOfData != "absolute") "Absolute" else "Relative"} view"
+      update(currentData)
     }
 
   }

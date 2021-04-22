@@ -1,5 +1,5 @@
 import charts.{Bar, Line, Pie}
-import components.{ControlBox, DataPane, StocksToDisplay, TickerDisplayBox, tickerListPane}
+import components.{ControlBox, DataPane, ErrorPopup, StocksToDisplay, TickerDisplayBox, tickerListPane}
 import data.{Data, TimeData}
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
@@ -48,9 +48,8 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   }
 
   
-  val updateButton = new Button("Update *TEST*")
+  val updateButton = new Button("Refresh")
   updateButton.getStyleClass.add("test")
-
   updateButton.onAction = (e) => {
     updateStage()
   }
@@ -82,12 +81,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       dates.changeInterval(controlBoxInterval.getValue)
     } catch {
       case e: RuntimeException => {
-        new Alert(AlertType.Error) {
-          initOwner(stageVariable)
-          title = "Error"
-          headerText = "Error while changing Interval!"
-          contentText = e.getMessage
-        }.showAndWait()
+        ErrorPopup.getPopup("Error", "Error while changing Interval!", e.getMessage, stageVariable)
       }
     }
     updateStage()
@@ -184,7 +178,9 @@ class StageBuilder(tickers: Seq[(String, String)]) {
         if (!stocks.getStocks.contains(tickersMap(tick))) {
           stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
           changeStage(false)
-        } else println("ticker already in the liost lol idiot")
+        } else {
+          ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
+        }
       }
 
       splitCenter.items.add(listWithTicker.mainPane)
@@ -254,7 +250,6 @@ class StageBuilder(tickers: Seq[(String, String)]) {
     dataPane.changeStock(stockData, controlBoxStock.getValue)
     updateStage()
     }
-
 
     for (chart <- listOfCharts) {
       chart.update(stockData)

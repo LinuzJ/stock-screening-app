@@ -34,7 +34,7 @@ class TimeData {
         case "1mo"    => 30*24*60*60
       }
     }
-    if ((intervalDuration * 1000L) < durationSeconds) {
+    if ((intervalDuration * 750L) < durationSeconds) {
       throw new RuntimeException("The Interval chosen is much smaller than the selected Dates, please choose a larger Interval!")
     } else if (intervalDuration < durationSeconds) {
       interval = i
