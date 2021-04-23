@@ -22,7 +22,7 @@ abstract class Chart {
   // Method that updates the charts with new data
   def update(newData: Seq[(String, Data)]): Unit
 }
-
+// Object for accessing charts
 object Charts {
   def bar(i: Seq[(String, Data)]) = new Bar(i)
   def line(i: Seq[(String, Data)]) = new Line(i)

@@ -1,7 +1,6 @@
 package charts
 
 import data.Data
-import scalafx.Includes.observableList2ObservableBuffer
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{CategoryAxis, LineChart, NumberAxis, XYChart}
 import scalafx.scene.control.{Button, Tooltip}
@@ -95,4 +94,5 @@ class Line(data: Seq[(String, Data)]) extends Chart {
     }
 
   }
+  changeTypeOfDataButton.getStyleClass.add("controlPanelButton")
 }

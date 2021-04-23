@@ -1,5 +1,5 @@
-import charts.{Bar, Charts, Line, Pie}
-import components.{DataPane, ErrorPopup, StocksToDisplay, TickerDisplayBox, tickerListPane}
+import charts.Charts
+import components.{DataPane, ErrorPopup, Layouts, StocksToDisplay, TickerDisplayBox, TickerListPane}
 import data.{Data, TimeData}
 import scalafx.application.{JFXApp, Platform}
 import scalafx.scene.Scene
@@ -30,7 +30,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   val listOfCharts: Seq[charts.Chart] = List(lineChart, pieChart, barChart)
 
   // other Panes
-  val dataPane                        = new DataPane(stockData)
+  val dataPane                        = new DataPane(stockData, tickers)
 
   // date pickers
   var datePickerStart                 = new DatePicker(LocalDate.now.minusDays(5))
@@ -46,7 +46,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
   
   val updateButton = new Button("Refresh")
-  updateButton.getStyleClass.add("test")
+  updateButton.getStyleClass.add("controlPanelButton")
   updateButton.onAction = (e) => {
     updateStage()
   }
@@ -55,6 +55,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
     text = "Change stocks"
     onAction = (e) => changeStage(false)
   }
+  buttonToSetup.getStyleClass.add("controlPanelButton")
 
   val buttonToDashboard = new Button{
     text = "Continue to the dashboard"
@@ -63,6 +64,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       changeStage(true)
     }
   }
+  buttonToDashboard.getStyleClass.add("controlPanelButton")
 
   val buttonExit = new Button{
     text = "Exit"
@@ -70,6 +72,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       Platform.exit()
     }
   }
+  buttonExit.getStyleClass.add("controlPanelButton")
 
   var controlBoxStock: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
   controlBoxStock.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
@@ -91,8 +94,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   }
 
 
-
-
+  // r = RIGHT; l = LEFT; t = TOP; b = BOTTOM
   def StockStage: JFXApp.PrimaryStage = {
     new JFXApp.PrimaryStage {
 
@@ -100,64 +102,50 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       val pane = new BorderPane()
 
       ////////////////////////////////
-      val splitLeft = new SplitPane()
-      splitLeft.items.add{
-        val i = new BorderPane()
-        i.setCenter(lineChart.getPane)
-        i
-      }
-      splitLeft.items.add{
-        val temp = new BorderPane()
-        temp.setCenter(barChart.getPane)
-        temp
-      }
-      splitLeft.orientation = scalafx.geometry.Orientation.Vertical
+      val l = new SplitPane()
+      l.items.add{ new BorderPane(){ center     = lineChart.getPane } }
+      l.items.add{ new BorderPane(){ center     = barChart.getPane } }
+      l.orientation = scalafx.geometry.Orientation.Vertical
       ////////////////////////////////
 
       ////////////////////////////////
-      val splitRight = new SplitPane()
+      val r = new SplitPane()
       //--------------------------------
-      val splitRigthTop = new BorderPane()
-      splitRigthTop.setCenter(pieChart.getPane)
+      val rt = new BorderPane(){ center = pieChart.getPane }
       //--------------------------------
-      val splitRightBottom = new SplitPane()
-      val splitRightBottomTop = new VBox()
-      val splitRithtBottomBottom = new BorderPane()
-      splitRightBottomTop.children.add(dataPane.getPane)
-      splitRightBottomTop.children.add(controlBoxStock)
-      splitRightBottomTop.children.add(controlBoxInterval)
-      splitRightBottom.items.add(splitRightBottomTop)
+      val rb = new SplitPane()
+      val rbt = new VBox()
+      val rbb = new BorderPane()
+      rbt.children.add(dataPane.getPane)
+      rbt.children.add(controlBoxStock)
+      rbt.children.add(controlBoxInterval)
 
-      val splitRithtBottomBottomTop = new HBox()
-      val srbbb                     = new BorderPane()
-      splitRithtBottomBottomTop.children.add(datePickerStart)
-      splitRithtBottomBottomTop.children.add(datePickerEnd)
-//      temp.setCenter(buttonToSetup)
-//      temp.setLeft(lineChart.changeTypeOfDataButton)
-//      temp.setRight(buttonExit)
-//      temp.setBottom(updateButton)
-      srbbb.setLeft{ val i = new VBox();i.children.add(buttonToSetup);i.children.add(lineChart.changeTypeOfDataButton); i}
-      srbbb.setRight{ val i = new VBox();i.children.add(buttonExit);i.children.add(updateButton); i}
-      splitRithtBottomBottom.setTop(splitRithtBottomBottomTop)
-      splitRithtBottomBottom.setBottom(srbbb)
-      splitRightBottom.items.add(splitRightBottomTop)
-      splitRightBottom.items.add(splitRithtBottomBottom)
-      splitRightBottom.orientation = scalafx.geometry.Orientation.Vertical
+      val rbbt                     = new HBox()
+      val rbbb                     = new BorderPane()
+      rbbt.children.add(datePickerStart)
+      rbbt.children.add(datePickerEnd)
+      rbbb.setCenter(Layouts.buttonGrid(lineChart.changeTypeOfDataButton, updateButton, buttonToSetup, buttonExit))
+      rbb.setTop(rbbt)
+      rbb.setBottom(rbbb)
+      rb.items.add(rbt)
+      rb.items.add(rbb)
+      rb.orientation = scalafx.geometry.Orientation.Vertical
       //--------------------------------
-      splitRight.items.add(splitRigthTop)
-      splitRight.items.add(splitRightBottom)
-      splitRight.orientation = scalafx.geometry.Orientation.Vertical
+      r.items.add(rt)
+      r.items.add(rb)
+      r.orientation = scalafx.geometry.Orientation.Vertical
       ////////////////////////////////
 
       ////////////////////////////////
-      val splitCenter = new SplitPane()
-      splitCenter.dividerPositions = 0.6
-      splitCenter.items.add(splitLeft)
-      splitCenter.items.add(splitRight)
-      splitCenter.orientation = scalafx.geometry.Orientation.Horizontal
+      val c = new SplitPane()
+      c.dividerPositions = 0.6
+      c.items.add(l)
+      c.items.add(r)
+      c.orientation = scalafx.geometry.Orientation.Horizontal
       ////////////////////////////////
 
-      pane.setCenter(splitCenter)
+      pane.setCenter(c)
+      pane.children.forEach( x => x.getStyleClass.add("theme") )
       scene = new Scene(pane, 1200, 1000) {
         stylesheets = List(getClass.getResource("style.css").toExternalForm)
       }
@@ -170,15 +158,16 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       title.value = "Setup"
       val pane = new BorderPane()
 
+
       // MainSplit
       ///////////////////////////
-      val splitCenter = new SplitPane()
+      val c = new SplitPane()
       ///////////////////////////
 
 
       // Left Side of the Split
       ///////////////////////////
-      val listWithTicker = new tickerListPane(tickers)
+      val listWithTicker = new TickerListPane(tickers)
       listWithTicker.button.onAction = (e) => {
         val tick = listWithTicker.listView.selectionModel().getSelectedItem
         val tickersMap = tickers.toMap
@@ -190,17 +179,17 @@ class StageBuilder(tickers: Seq[(String, String)]) {
         }
       }
 
-      splitCenter.items.add(listWithTicker.mainPane)
+      c.items.add(listWithTicker.mainPane)
       ///////////////////////////
 
 
       // Right Side of the Split
       ///////////////////////////
-      val splitRight = new SplitPane()
+      val r = new SplitPane()
 
-      val splitRightTop = new BorderPane()
-      val splitRightTopInside = new FlowPane()
-      splitRightTopInside.getStyleClass.add("splitRightTopInside")
+      val rt = new BorderPane()
+      val rtInside = new FlowPane()
+      rtInside.getStyleClass.add("splitRightTopInside")
       stockData.foreach{
         stock => {
           val boxObject = new TickerDisplayBox(stock._1)
@@ -210,24 +199,25 @@ class StageBuilder(tickers: Seq[(String, String)]) {
             }
             changeStage(false)
           }
-          splitRightTopInside.children += boxObject.getBox
+          rtInside.children += boxObject.getBox
         }
       }
-      splitRightTop.setCenter(splitRightTopInside)
+      rt.setCenter(rtInside)
 
-      val splitRightBottom = new BorderPane()
-      splitRightBottom.setCenter(buttonToDashboard)
-      splitRightBottom.setPrefSize(200, 200)
-      splitRight.items.add(splitRightTop)
-      splitRight.items.add(splitRightBottom)
-      splitRight.orientation = scalafx.geometry.Orientation.Vertical
+      val rb = new BorderPane()
+      rb.setCenter(buttonToDashboard)
+      rb.setPrefSize(200, 200)
+      r.items.add(rt)
+      r.items.add(rb)
+      r.orientation = scalafx.geometry.Orientation.Vertical
       ///////////////////////////
 
       ///////////////////////////
-      splitCenter.items.add(splitRight)
+      c.items.add(r)
       ///////////////////////////
 
-      pane.setCenter(splitCenter)
+      pane.setCenter(c)
+      pane.children.forEach( x => x.getStyleClass.add("theme") )
 
       scene = new Scene(pane, 1000, 1000) {
         stylesheets = List(getClass.getResource("style.css").toExternalForm)
@@ -262,4 +252,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
     }
     changeStage(true)
   }
+}
+object StageBuilder {
+  def newStage(i: Seq[(String, String)]) = { new StageBuilder(i) }
 }

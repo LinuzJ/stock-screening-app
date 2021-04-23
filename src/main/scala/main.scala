@@ -15,8 +15,7 @@ object Main extends JFXApp {
   // read the tickers from setupfile
   val tickers = readTickers.fromFile("tickersConfig.txt")
 
-  val buildStage = new StageBuilder(tickers)
-  stage = buildStage.stageVariable
+  stage = StageBuilder.newStage(tickers).stageVariable
 
 }
 

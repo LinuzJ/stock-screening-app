@@ -1,23 +1,42 @@
+/*
+Color palette:
+ #38686A
+ #829081
+ #A3B4A2
+ #CDC6AE
 
-.test {
-  -fx-spacing: 30;
-  -fx-padding: 20;
-  -fx-margin: 40;
-  -fx-border-style: solid;
-  -fx-border-color: black;
+*/
+.controlPanelButton {
+  -fx-display: block;
+  -fx-width: 100%;
+  -fx-height: 70px;
+  -fx-border: none;
+  -fx-background-color: #A3B4A2;
+  -fx-color: black;
+  -fx-border-radius: 4px;
+  -fx-border-color: #829081;
+  -fx-text-align: center;
+  -fx-text-decoration: none;
+  -fx-display: inline-block;
+  -fx-font-size: 16px;
 }
-
+.controlPanelButton:hover {
+  -fx-background-color: #38686A;
+}
 .tickerDisplay {
-  -fx-background-color: #9c9c9c;
+  -fx-background-color: #38686A;
   -fx-border-style: solid;
   -fx-border-radius: 4px;
   -fx-border-color: black;
   -fx-spacing: 10;
   -fx-padding: 10;
-  -fx-margin: 10;
+  -fx-margin: 60;
 }
 .splitRightTopInside {
   -fx-spacing: 20;
   -fx-padding: 20;
   -fx-margin: 20;
+}
+.theme {
+  -fx-background: #DCDCDC;
 }

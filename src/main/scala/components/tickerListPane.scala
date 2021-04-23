@@ -3,10 +3,11 @@ package components
 import scalafx.scene.control.{Button, ListView}
 import scalafx.scene.layout.BorderPane
 
-class tickerListPane(tickers: Seq[(String, String)]) {
+class TickerListPane(tickers: Seq[(String, String)]) {
 
   val listView    = new ListView(tickers.map(_._1))
   val button      = new Button("ADD")
+  button.getStyleClass.add("controlPanelButton")
 
   val mainPane: BorderPane = new BorderPane()
 
@@ -14,9 +15,9 @@ class tickerListPane(tickers: Seq[(String, String)]) {
   mainPane.setBottom(button)
 }
 
-object tickerListPane {
+object TickerListPane {
   def getPane(source: Seq[(String, String)]): BorderPane = {
-    val temp = new tickerListPane(source)
+    val temp = new TickerListPane(source)
     temp.mainPane
   }
 }
