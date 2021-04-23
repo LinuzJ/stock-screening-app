@@ -26,14 +26,6 @@ class Line(data: Seq[(String, Data)]) extends Chart {
     val plot = new LineChart(xAxis, yAxis)
     series.foreach(x => plot.getData.add(x))
     plot.setTitle(s"Price over time (${if (typeOfData == "absolute") "Absolute" else "Relative"})")
-    plot.getData.forEach(s => {
-      s.getData.forEach(i => {
-        Tooltip.install(i.getNode, new Tooltip(s"Price\n${i.getYValue}"){
-          showDelay = Duration.Zero
-          showDuration = Duration.Indefinite
-        })
-      })
-    })
     plot.getXAxis.setTickLabelRotation(90)
     plot
   }
@@ -45,11 +37,20 @@ class Line(data: Seq[(String, Data)]) extends Chart {
     newSeries.foreach(x => {
       thisChart.getData.add(x)
     })
-    thisChart.setTitle(s"Price over time (${if (typeOfData == "absolute") "Absolute" else "Relative"})")
-    thisChart.getYAxis.setLabel({if (typeOfData == "absolute") "Price USD" else "Relative Change"})
+    thisChart.setTitle(s"Price over time (${if (typeOfChange == "absolute") "Absolute" else "Relative"})")
+    thisChart.getYAxis.setLabel({if (typeOfChange == "absolute") "Price USD" else "Relative Change"})
     thisChart.getData.forEach(s => {
       s.getData.forEach(i => {
-        Tooltip.install(i.getNode, new Tooltip(s"Price\n${i.getYValue}"){
+        Tooltip.install(i.getNode, new Tooltip({
+          if (typeOfChange == "absolute"){
+            s"Price: ${s.getName}\n"+ "$" + i.getYValue
+          } else {
+            s"Change: ${s.getName}\n"+ {
+              val v: Double = i.getYValue.doubleValue()
+              if (v > 1)  { (v - 1) * 100 } else { (1 - v) * -100 }
+            } + "%"
+          }
+        }){
           showDelay = Duration.Zero
           showDuration = Duration.Indefinite
         })
