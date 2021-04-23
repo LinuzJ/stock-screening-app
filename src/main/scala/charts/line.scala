@@ -4,7 +4,6 @@ import data.Data
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{CategoryAxis, LineChart, NumberAxis, XYChart}
 import scalafx.scene.control.{Button, Tooltip}
-import scalafx.scene.layout.{BorderPane, VBox}
 import scalafx.util.Duration
 
 class Line(data: Seq[(String, Data)]) extends Chart {
@@ -33,22 +32,20 @@ class Line(data: Seq[(String, Data)]) extends Chart {
   private def updateChart(typeOfChange: String): Unit = {
     var newSeries = createSeriesAbsolute(this.currentData)
     if (typeOfChange == "relative") { newSeries = createSeriesRelative(this.currentData) }
-    thisChart.getData.remove(0, thisChart.getData.size)
-    newSeries.foreach(x => {
-      thisChart.getData.add(x)
-    })
+    thisChart.data.set(ObservableBuffer(newSeries))
+
     thisChart.setTitle(s"Price over time (${if (typeOfChange == "absolute") "Absolute" else "Relative"})")
     thisChart.getYAxis.setLabel({if (typeOfChange == "absolute") "Price USD" else "Relative Change"})
     thisChart.getData.forEach(s => {
       s.getData.forEach(i => {
         Tooltip.install(i.getNode, new Tooltip({
           if (typeOfChange == "absolute"){
-            s"Price: ${s.getName}\n"+ "$" + i.getYValue
+            s"Price: ${s.getName}\n"+ "$" + i.getYValue + "\nAt: " + i.getXValue
           } else {
             s"Change: ${s.getName}\n"+ {
               val v: Double = i.getYValue.doubleValue()
               if (v > 1)  { roundDecimal((v - 1)*100, 2) } else { roundDecimal((1 - v) * - 100, 2) }
-            } + "%"
+            } + "%"  + "\nAt: " + i.getXValue
           }
         }){
           showDelay = Duration.Zero
