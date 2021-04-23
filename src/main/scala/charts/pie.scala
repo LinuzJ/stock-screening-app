@@ -8,8 +8,8 @@ import scalafx.util.Duration
 
 class Pie(inputData: Seq[(String, Data)]) extends Chart {
 
-  private var currentData: Seq[(String, Data)] = inputData
-  private var thisChart: PieChart = {
+  var currentData: Seq[(String, Data)] = inputData
+  var thisChart: PieChart = {
     val newPieChart = new PieChart {
     title = "Total Volume"
     data = ObservableBuffer(currentData.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))

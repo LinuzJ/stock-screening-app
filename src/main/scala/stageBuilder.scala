@@ -1,4 +1,4 @@
-import charts.{Bar, Line, Pie}
+import charts.{Bar, Charts, Line, Pie}
 import components.{DataPane, ErrorPopup, StocksToDisplay, TickerDisplayBox, tickerListPane}
 import data.{Data, TimeData}
 import scalafx.application.{JFXApp, Platform}
@@ -24,9 +24,9 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   
   
   // charts with initial values
-  val lineChart                       = new Line(stockData)
-  val pieChart                        = new Pie(stockData)
-  val barChart                        = new Bar(stockData)
+  val lineChart                       = Charts.line(stockData)
+  val pieChart                        = Charts.pie(stockData)
+  val barChart                        = Charts.bar(stockData)
   val listOfCharts: Seq[charts.Chart] = List(lineChart, pieChart, barChart)
 
   // other Panes
