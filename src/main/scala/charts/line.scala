@@ -47,7 +47,7 @@ class Line(data: Seq[(String, Data)]) extends Chart {
           } else {
             s"Change: ${s.getName}\n"+ {
               val v: Double = i.getYValue.doubleValue()
-              if (v > 1)  { (v - 1) * 100 } else { (1 - v) * -100 }
+              if (v > 1)  { roundDecimal((v - 1)*100, 2) } else { roundDecimal((1 - v) * - 100, 2) }
             } + "%"
           }
         }){
@@ -95,5 +95,9 @@ class Line(data: Seq[(String, Data)]) extends Chart {
       update(currentData)
     }
 
+  }
+
+  private def roundDecimal(i: Double, decimals: Int): Double = {
+    BigDecimal(i).setScale(decimals, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
 }
