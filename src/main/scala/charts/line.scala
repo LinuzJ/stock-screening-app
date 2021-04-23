@@ -47,6 +47,14 @@ class Line(data: Seq[(String, Data)]) extends Chart {
     })
     thisChart.setTitle(s"Price over time (${if (typeOfData == "absolute") "Absolute" else "Relative"})")
     thisChart.getYAxis.setLabel({if (typeOfData == "absolute") "Price USD" else "Relative Change"})
+    thisChart.getData.forEach(s => {
+      s.getData.forEach(i => {
+        Tooltip.install(i.getNode, new Tooltip(s"Price\n${i.getYValue}"){
+          showDelay = Duration.Zero
+          showDuration = Duration.Indefinite
+        })
+      })
+    })
     thisChart.autosize()
   }
 
