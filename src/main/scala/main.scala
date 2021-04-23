@@ -5,10 +5,12 @@ import scalafx.application.JFXApp
 object Main extends JFXApp {
 
   // TODO
-  // - lineChart adjustability between absolute and relative data KIND OF DONE?
   // - Error handling for the data fetching
+  // - y scaling linechart
   // - Control Panel
   // - TESTING ????????????????
+  //  KNOWN BUGS
+  // - xaxis when chaning dates
 
   // read the tickers from setupfile
   val tickers = readTickers.fromFile("tickersConfig.txt")

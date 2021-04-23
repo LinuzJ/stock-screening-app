@@ -1,6 +1,7 @@
 package charts
 
 import data.Data
+import scalafx.Includes.observableList2ObservableBuffer
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{CategoryAxis, LineChart, NumberAxis, XYChart}
 import scalafx.scene.control.{Button, Tooltip}
@@ -18,6 +19,7 @@ class Line(data: Seq[(String, Data)]) extends Chart {
   private val thisChart: LineChart[String, Number] = {
     val xAxis = CategoryAxis()
     val yAxis = NumberAxis()
+    yAxis.forceZeroInRange = false
     xAxis.setLabel("Time")
     yAxis.setLabel("Price")
     val series = createSeriesAbsolute(currentData)
