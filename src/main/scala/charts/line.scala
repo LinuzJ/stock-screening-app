@@ -40,7 +40,7 @@ class Line(data: Seq[(String, Data)]) extends Chart {
       s.getData.forEach(i => {
         Tooltip.install(i.getNode, new Tooltip({
           if (typeOfChange == "absolute"){
-            s"Price: ${s.getName}\n"+ "$" + i.getYValue + "\nAt: " + i.getXValue
+            s"Price: ${s.getName}\n"+ "$" + roundDecimal(i.getYValue.doubleValue(), 2) + "\nAt: " + i.getXValue
           } else {
             s"Change: ${s.getName}\n"+ {
               val v: Double = i.getYValue.doubleValue()
@@ -92,9 +92,5 @@ class Line(data: Seq[(String, Data)]) extends Chart {
       update(currentData)
     }
 
-  }
-
-  private def roundDecimal(i: Double, decimals: Int): Double = {
-    BigDecimal(i).setScale(decimals, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
 }

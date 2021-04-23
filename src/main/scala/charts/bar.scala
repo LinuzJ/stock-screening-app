@@ -1,9 +1,11 @@
 package charts
 
 import data.Data
-import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{CategoryAxis, NumberAxis, StackedBarChart, XYChart}
+import scalafx.scene.control.Tooltip
+import scalafx.util.Duration
+
 
 
 class Bar(inputData: Seq[(String, Data)]) extends Chart {
@@ -40,6 +42,16 @@ class Bar(inputData: Seq[(String, Data)]) extends Chart {
     // new sequence of series with the new data
     val newSeries = createSeries(currentData).map(_.delegate)
     thisChart.data.set(ObservableBuffer(newSeries))
+    thisChart.getData.forEach(s => {
+      s.getData.forEach(i => {
+        Tooltip.install(i.getNode, new Tooltip({
+          s"Volume: ${s.getName}\n" + i.getYValue + "\nAt: " + i.getXValue
+        }){
+          showDelay = Duration.Zero
+          showDuration = Duration.Indefinite
+        })
+      })
+    })
   }
 
   private def createSeries(newData: Seq[(String, Data)]): Seq[XYChart.Series[String, Number]] = {

@@ -15,6 +15,9 @@ abstract class Chart {
       pane.setCenter(getChart)
       pane
     }
+  def roundDecimal(i: Double, decimals: Int): Double = {
+    BigDecimal(i).setScale(decimals, BigDecimal.RoundingMode.HALF_UP).toDouble
+  }
 
   // Method that updates the charts with new data
   def update(newData: Seq[(String, Data)]): Unit
