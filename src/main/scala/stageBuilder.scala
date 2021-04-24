@@ -3,9 +3,11 @@ import components.{DataPane, ErrorPopup, Layouts, StocksToDisplay, TickerDisplay
 import data.{Data, TimeData}
 import scalafx.application.{JFXApp, Platform}
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, ComboBox, DatePicker, SplitPane}
-import scalafx.scene.layout.{BorderPane, FlowPane, HBox, VBox}
+import scalafx.scene.control.{Button, ComboBox, DatePicker, ListView, SplitPane}
+import scalafx.scene.layout.{BorderPane, FlowPane, HBox, Priority, VBox}
 import scalafx.Includes._
+import scalafx.geometry.{Insets, Pos}
+import scalafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination, KeyEvent}
 
 import java.time.LocalDate
 
@@ -99,11 +101,15 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       }
     }
     updateStage()
+
   }
 
 
   // r = RIGHT; l = LEFT; t = TOP; b = BOTTOM
   def StockStage: JFXApp.PrimaryStage = {
+
+    isSetup = false
+
     new JFXApp.PrimaryStage {
 
       title.value = "Data dashboard"
@@ -156,12 +162,22 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       pane.children.forEach( x => x.getStyleClass.add("theme") )
       scene = new Scene(pane, 1200, 1000) {
         stylesheets = List(getClass.getResource("style.css").toExternalForm)
+        onKeyPressed = { e => {
+          val combo = new KeyCodeCombination(KeyCode.Tab, KeyCombination.ControlDown)
+          if (combo.`match`(e)) {
+            if (isSetup) { changeStage(true) } else { changeStage(false) }
+            }
+          }
+        }
       }
     }
   }
 
 
   def SetupStage: JFXApp.PrimaryStage = {
+
+    isSetup = true
+
     new JFXApp.PrimaryStage {
       title.value = "Setup"
       val pane = new BorderPane()
@@ -172,12 +188,18 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       val c = new SplitPane()
       ///////////////////////////
 
-
+      val listView: ListView[String] = new ListView(tickers.map(_._1))
       // Left Side of the Split
       ///////////////////////////
-      val listWithTicker = new TickerListPane(tickers)
-      listWithTicker.button.onAction = (e) => {
-        val tick = listWithTicker.listView.selectionModel().getSelectedItem
+      c.items.add{
+        new BorderPane(){
+          center = listView
+        }
+      }
+      val buttonAdd = new Button("ADD")
+      buttonAdd.getStyleClass.add("controlPanelButton")
+      buttonAdd.onAction = (e) => {
+        val tick = listView.selectionModel().getSelectedItem
         val tickersMap = tickers.toMap
         if (!stocks.getStocks.contains(tickersMap(tick))) {
           stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
@@ -186,18 +208,14 @@ class StageBuilder(tickers: Seq[(String, String)]) {
           ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
         }
       }
-
-      c.items.add(listWithTicker.mainPane)
       ///////////////////////////
 
 
       // Right Side of the Split
       ///////////////////////////
-      val r = new SplitPane()
-
-      val rt = new BorderPane()
-      val rtInside = new FlowPane()
-      rtInside.getStyleClass.add("splitRightTopInside")
+      val rt = new FlowPane()
+      FlowPane.setMargin(rt, Insets(15, 15, 15, 15))
+      rt.getStyleClass.add("splitRightTopInside")
       stockData.foreach{
         stock => {
           val boxObject = new TickerDisplayBox(stock._1)
@@ -207,19 +225,25 @@ class StageBuilder(tickers: Seq[(String, String)]) {
             }
             changeStage(false)
           }
-          rtInside.children += boxObject.getBox
+          rt.children += boxObject.getBox
         }
       }
-      rt.setCenter(rtInside)
+      val bBox: HBox = new HBox(10, buttonToDashboard, buttonExit)
+      bBox.setAlignment(Pos.Center)
+      HBox.setHgrow(buttonToDashboard, Priority.Always)
+      HBox.setHgrow(buttonExit, Priority.Always)
+      VBox.setVgrow(buttonAdd, Priority.Always)
+      buttonToDashboard.setMaxSize(Double.MaxValue, Double.MaxValue)
+      buttonExit.setMaxSize(Double.MaxValue, Double.MaxValue)
+      buttonAdd.setMaxSize(Double.MaxValue, Double.MaxValue)
 
-      val rb = new BorderPane(){
-        top = buttonToDashboard
-        bottom = buttonExit
+      val bVBox: VBox = new VBox(15, buttonAdd, bBox)
+      VBox.setMargin(bVBox, Insets(15, 15, 15, 15))
+
+      val r = new BorderPane(){
+        top        = rt
+        bottom     = bVBox
       }
-      rb.setPrefSize(200, 200)
-      r.items.add(rt)
-      r.items.add(rb)
-      r.orientation = scalafx.geometry.Orientation.Vertical
       ///////////////////////////
 
       ///////////////////////////
@@ -231,12 +255,33 @@ class StageBuilder(tickers: Seq[(String, String)]) {
 
       scene = new Scene(pane, 1000, 1000) {
         stylesheets = List(getClass.getResource("style.css").toExternalForm)
+        onKeyPressed = {
+          e => {
+              val combo = new KeyCodeCombination(KeyCode.Tab, KeyCombination.ControlDown)
+              if (combo.`match`(e)) {
+                if (isSetup) {
+                  updateStage()
+                  changeStage(true) } else { changeStage(false) }
+              } else if (e.getCode == KeyCode.A.delegate) {
+                val tick = listView.selectionModel().getSelectedItem
+                val tickersMap = tickers.toMap
+                if (!stocks.getStocks.contains(tickersMap(tick))) {
+                  stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
+                  changeStage(false)
+                } else {
+                  ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
+                }
+              }
+          }
+        }
       }
     }
+
   }
 
   // stage initially set to the SetupStage
   var stageVariable: JFXApp.PrimaryStage = SetupStage
+  var isSetup: Boolean = true
 
   def changeStage(input: Boolean): Unit = {
     if (input) {
