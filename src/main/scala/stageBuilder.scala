@@ -214,7 +214,8 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       // Right Side of the Split
       ///////////////////////////
       val rt = new FlowPane()
-      FlowPane.setMargin(rt, Insets(15, 15, 15, 15))
+      rt.setVgap(10)
+      rt.setHgap(10)
       rt.getStyleClass.add("splitRightTopInside")
       stockData.foreach{
         stock => {

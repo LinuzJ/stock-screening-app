@@ -1,11 +1,11 @@
 package components
 
 import scalafx.scene.control.{Button, Label}
-import scalafx.scene.layout.{HBox, VBox}
+import scalafx.scene.layout.HBox
 
 class TickerDisplayBox(ticker: String) {
   val pane: HBox        = new HBox
-  pane.getStyleClass.add("tickerDisplay")
+  pane.getStyleClass.add("controlPanelButton")
 
   val label: Label      = new Label(ticker)
   val button: Button    = new Button("X")

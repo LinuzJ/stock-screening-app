@@ -24,13 +24,23 @@ Color palette:
   -fx-background-color: #38686A;
 }
 .tickerDisplay {
-  -fx-background-color: #38686A;
-  -fx-border-style: solid;
-  -fx-border-radius: 4px;
-  -fx-border-color: black;
-  -fx-spacing: 10;
-  -fx-padding: 10;
-  -fx-margin: 60;
+  -fx-display: block;
+  -fx-width: 95%;
+  -fx-height: 95%;
+  -fx-border: none;
+  -fx-background-color: #A3B4A2;
+  -fx-color: black;
+  -fx-border-radius: 6px;
+  -fx-border-color: #829081;
+  -fx-text-align: center;
+  -fx-text-decoration: none;
+  -fx-display: inline-block;
+  -fx-font-size: 12px;
+}
+.controlPanelButton:hover {
+  -fx-color: white;
+  -fx-border-color: #38686A;
+
 }
 .splitRightTopInside {
   -fx-spacing: 20;

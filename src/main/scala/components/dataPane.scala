@@ -27,7 +27,7 @@ class DataPane(inputData: Seq[(String, Data)], t: Seq[(String, String)]) {
         "Min price: " + { Components.roundDecimal(map(s2d.get).getFormatted.map(_._2).min, 4) } + " $",
         "Average Price: " + { Components.roundDecimal(Components.mean(map(s2d.get).getFormatted.map(_._2)), 4) } + " $",
         "Variance: " + { map(s2d.get).getVariance(4) },
-        "Standard deviation  (Price): " + { map(s2d.get).getStdDev(4) },
+        "Standard deviation : " + { map(s2d.get).getStdDev(4) },
         "Total Volume: " + map(s2d.get).getVolumeTotal
 
       )
