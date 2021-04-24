@@ -15,12 +15,20 @@ class StageBuilder(tickers: Seq[(String, String)]) {
   val dates: TimeData = new TimeData
 
   // method for getting instances of Data for the different stocks
-  def buildData(inputStocks: Seq[String]): Seq[(String, Data)] = inputStocks.map{
-    x =>
-    (x, new Data(x, dates.getDates("start"), dates.getDates("end"), dates.getInterval))
+  def buildData(inputStocks: Seq[String]): Option[Seq[(String, Data)]] = {
+    val m = stocks.getStocks
+    try {
+      Some(inputStocks.map{
+      x =>
+      (x, Data.generate(x, dates.getDates("start"), dates.getDates("end"), dates.getInterval))
+      })
+    } catch {
+      case e: Throwable => ErrorPopup.getPopup("Error!", "There was an error while getting the data, please check your internet connection!", e.getMessage, stageVariable); Some(Seq[(String, Data)]())
+    }
+
   }
   
-  var stockData: Seq[(String, Data)] = buildData(stocks.getStocks)
+  var stockData: Seq[(String, Data)] = buildData(stocks.getStocks).get
   
   
   // charts with initial values
@@ -204,8 +212,10 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       }
       rt.setCenter(rtInside)
 
-      val rb = new BorderPane()
-      rb.setCenter(buttonToDashboard)
+      val rb = new BorderPane(){
+        top = buttonToDashboard
+        bottom = buttonExit
+      }
       rb.setPrefSize(200, 200)
       r.items.add(rt)
       r.items.add(rb)
@@ -233,13 +243,13 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       stageVariable = StockStage
       dataPane.update(stockData)
     } else {
-      stockData = buildData(stocks.getStocks)
+      stockData = buildData(stocks.getStocks).get
       stageVariable = SetupStage
     }
   }
 
   def updateStage(): Unit = {
-    stockData = buildData(stocks.getStocks)
+    stockData = buildData(stocks.getStocks).get
     controlBoxStock = new ComboBox[String](stockData.map(_._1))
     controlBoxStock.getSelectionModel.select({ try { controlBoxStock.getValue } catch { case e: Throwable => "" } })
     controlBoxStock.onAction = (e) => {

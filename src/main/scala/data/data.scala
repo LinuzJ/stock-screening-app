@@ -13,10 +13,12 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
   var source: String = s"https://query1.finance.yahoo.com/v8/finance/chart/${stock}?symbol=${stock}&period1=${startDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&period2=${endDate.toEpochSecond(LocalTime.NOON, ZoneOffset.MIN)}&interval=${interval}"
 
   // fetches the raw data from the origin
-  private val response: HttpResponse[String] = Http(source).asString
+  private val response: Option[HttpResponse[String]] = Some(Http(source).asString)
+
+  println(response.get.headers("status").head)
 
   // parses it into readable format for circe
-  private val json: Json = parse(response.body).getOrElse(Json.Null)
+  private val json: Json = parse(response.get.body).getOrElse(Json.Null)
   json match {
     case Json.Null => println("fetching failed", source)
     case _ =>
@@ -88,8 +90,6 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
 
   def getVolumeTotal: Int = volume.get.sum.toInt
 
-  def getResonse = response.body
-
   def getFormatted: Seq[(String, Double)] = {
     this.price.
       map(_.head).
@@ -115,4 +115,9 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
   // helper funtion to filter out invalid or dirty data
   private def deleteInvalid(input: Seq[Seq[Double]]): Seq[Seq[Double]] = input.filter(x => x.forall(!_.isNaN))
 
+}
+object Data {
+  def generate(stock: String, startDate: LocalDate, endDate: LocalDate, interval: String): Data = {
+    new Data(stock, startDate, endDate, interval)
+  }
 }
