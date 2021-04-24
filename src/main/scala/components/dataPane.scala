@@ -23,11 +23,12 @@ class DataPane(inputData: Seq[(String, Data)], t: Seq[(String, String)]) {
       val t2map = t.map(x => (x._2, x._1)).toMap
       val labels2Add: Seq[String] = Seq(
         t2map(s2d.get),
-        "Total Volume: " + map(s2d.get).getVolumeTotal,
+        "Max price: " + { Components.roundDecimal(map(s2d.get).getFormatted.map(_._2).max, 4) } + " $",
+        "Min price: " + { Components.roundDecimal(map(s2d.get).getFormatted.map(_._2).min, 4) } + " $",
         "Average Price: " + { Components.roundDecimal(Components.mean(map(s2d.get).getFormatted.map(_._2)), 4) } + " $",
         "Variance: " + { map(s2d.get).getVariance(4) },
         "Standard deviation  (Price): " + { map(s2d.get).getStdDev(4) },
-        "Standard deviation (Volume): " + { map(s2d.get).getStdDevVol(2) },
+        "Total Volume: " + map(s2d.get).getVolumeTotal
 
       )
       new BorderPane(){

@@ -29,3 +29,18 @@ lazy val javaFXModules = Seq("base", "controls", "fxml", "graphics", "media", "s
 libraryDependencies ++= javaFXModules.map( m=>
 "org.openjfx" % s"javafx-$m" % "14.0.1" classifier osName
 )
+
+//Testfx
+libraryDependencies += "org.testfx" % "testfx-junit5" % "4.0.16-alpha" % Test
+
+//Junit
+libraryDependencies += "org.junit.jupiter" % "junit-jupiter-api" % "5.7.0-M1" % Test
+libraryDependencies += "org.junit.jupiter" % "junit-jupiter-engine" % "5.7.0-M1" % Test
+libraryDependencies += "org.junit.platform" % "junit-platform-runner" % "1.7.0-M1" % Test
+
+//Junit5 interface, that allows running Junit tests from Scala
+//This requires a plugin in project/plugins.sbt
+resolvers in ThisBuild += Resolver.jcenterRepo
+libraryDependencies ++= Seq(
+    "net.aichler" % "jupiter-interface" % JupiterKeys.jupiterVersion.value % Test
+)

@@ -112,7 +112,6 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
 
   private def variance(i: Seq[Double]): Double = {
     val avg = Components.mean(i)
-    println("avg: ",avg)
     i.map(a => math.pow(a - avg, 2)).sum / i.size
   }
 
