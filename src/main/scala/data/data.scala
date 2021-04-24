@@ -2,7 +2,7 @@ package data
 import io.circe.Json
 import io.circe.parser.parse
 import scalaj.http.{Http, HttpResponse}
-
+import Numeric.Implicits._
 import java.text.SimpleDateFormat
 import java.time.{LocalDate, LocalTime, ZoneOffset}
 import java.util.Date
@@ -14,8 +14,6 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
 
   // fetches the raw data from the origin
   private val response: Option[HttpResponse[String]] = Some(Http(source).asString)
-
-  println(response.get.headers("status").head)
 
   // parses it into readable format for circe
   private val json: Json = parse(response.get.body).getOrElse(Json.Null)
@@ -111,6 +109,18 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
       ((x.last)/firstValue)
     })
   }
+
+  private def variance(i: Seq[Double]): Double = {
+    val avg = Components.mean(i)
+    println("avg: ",avg)
+    i.map(a => math.pow(a - avg, 2)).sum / i.size
+  }
+
+  private def stdDev(i: Seq[Double]): Double = math.sqrt(variance(i))
+
+  def getStdDev(d: Int): Double =  Components.roundDecimal(stdDev(getFormatted.map(_._2)), d)
+  def getStdDevVol(d: Int): Double =  Components.roundDecimal(stdDev(getVolumeData.map(_._2.toLong)), d)
+  def getVariance(d: Int): Double = Components.roundDecimal(variance(getFormatted.map(_._2)), d)
 
   // helper funtion to filter out invalid or dirty data
   private def deleteInvalid(input: Seq[Seq[Double]]): Seq[Seq[Double]] = input.filter(x => x.forall(!_.isNaN))

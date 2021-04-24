@@ -24,7 +24,11 @@ class DataPane(inputData: Seq[(String, Data)], t: Seq[(String, String)]) {
       val labels2Add: Seq[String] = Seq(
         t2map(s2d.get),
         "Total Volume: " + map(s2d.get).getVolumeTotal,
-        "Average Price: " + { (map(s2d.get).getFormatted.map(_._2).sum)/(map(s2d.get).getFormatted.map(_._2).length) } + " $"
+        "Average Price: " + { Components.roundDecimal(Components.mean(map(s2d.get).getFormatted.map(_._2)), 4) } + " $",
+        "Variance: " + { map(s2d.get).getVariance(4) },
+        "Standard deviation  (Price): " + { map(s2d.get).getStdDev(4) },
+        "Standard deviation (Volume): " + { map(s2d.get).getStdDevVol(2) },
+
       )
       new BorderPane(){
         center = new ListView(labels2Add)
@@ -36,31 +40,5 @@ class DataPane(inputData: Seq[(String, Data)], t: Seq[(String, String)]) {
       }
     }
   }
-
-//  def createPane(input: Seq[(String, Data)], stockToDisplay: String): BorderPane = {
-//    try {
-//      val newPane = new BorderPane()
-//      val insidePane: VBox = new VBox()
-//      val mapped = input.toMap
-//      insidePane.children.add{
-//       val newButton =  new Label("Stock: " + mapped(stockToDisplay).stock)
-//       newButton.getStyleClass.add("test")
-//        newButton
-//      }
-//      insidePane.children.add{
-//       val newButton =  new Label("Total Volume: " + mapped(stockToDisplay).getVolumeTotal)
-//       newButton.getStyleClass.add("test")
-//        newButton
-//      }
-//
-//      newPane.setCenter(insidePane)
-//
-//      newPane
-//    } catch {
-//      case e: NoSuchElementException => new BorderPane{
-//        center = new Label("Failed to generate the data due to an error")
-//      }
-//    }
-//
-//  }
 }
+
