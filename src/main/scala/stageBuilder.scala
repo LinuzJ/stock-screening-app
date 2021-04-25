@@ -4,6 +4,7 @@ import data.{Data, TimeData}
 import scalafx.Includes._
 import scalafx.application.{JFXApp, Platform}
 import scalafx.scene.Scene
+import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
 import scalafx.scene.layout._
@@ -108,13 +109,11 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
     updateStage()
   }
 
-
   // Setting up the theme and menubar
   var theme: Theme = Theme.newT
   val menuBarInstance: MenuBarTheme.type     = MenuBarTheme
   val settingsBar = menuBarInstance.get(theme)
   menuBarInstance.thisMenu.menuOfIntrest.get.items.forEach( i => i.onAction = (e) => { theme.changeTheme(i.getText) ; changeStage(!isSetup) })
-
 
   // r = RIGHT; l = LEFT; t = TOP; b = BOTTOM
   def StockStage: JFXApp.PrimaryStage = {
