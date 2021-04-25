@@ -58,21 +58,20 @@ class Data(val stock: String, startDate: LocalDate, endDate: LocalDate, interval
 
   // fix the date format depending on the Interval set
   def timeFormat: SimpleDateFormat = {
-    new SimpleDateFormat{
-      interval match {
-          case "1m"     => "HH:mm"
-          case "2m"     => "HH:mm"
-          case "5m"     => "HH:mm"
-          case "15m"    => "dd-HH:mm"
-          case "30m"    => "dd-HH:mm"
-          case "60m"    => "dd-HH:mm"
-          case "90m"    => "dd-HH:mm"
-          case "1d"     => "MMMMMMM dd"
-          case "5d"     => "MMMMMMM dd"
-          case "1wk"    => "MMMMMMM dd"
-          case "1mo"    => "MMMMMMM"
-      }
-    }
+    val newFormat = interval match {
+                      case "1m"     => "HH:mm"
+                      case "2m"     => "HH:mm"
+                      case "5m"     => "HH:mm"
+                      case "15m"    => "dd-HH:mm"
+                      case "30m"    => "dd-HH:mm"
+                      case "60m"    => "dd-HH:mm"
+                      case "90m"    => "dd-HH:mm"
+                      case "1d"     => "MMMMMMM dd"
+                      case "5d"     => "MMMMMMM dd"
+                      case "1wk"    => "MMMMMMM dd"
+                      case "1mo"    => "MMMMMMM"
+                  }
+    new SimpleDateFormat(newFormat)
   }
 
 

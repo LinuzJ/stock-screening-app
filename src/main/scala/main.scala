@@ -5,7 +5,6 @@ import scalafx.application.JFXApp
 object Main extends JFXApp {
 
   // TODO
-  //  KNOWN BUGS
   // - xaxis when chaning dates
 
   // read the tickers from setupfile
