@@ -1,13 +1,13 @@
 import charts.Charts
-import components.{DataPane, ErrorPopup, Layouts, MenuBarTheme, StocksToDisplay, TickerDisplayBox, TickerListPane}
+import components._
 import data.{Data, TimeData}
-import scalafx.application.{JFXApp, Platform}
-import scalafx.scene.Scene
-import scalafx.scene.control.{Button, ComboBox, DatePicker, ListView, SplitPane}
-import scalafx.scene.layout.{BorderPane, FlowPane, HBox, Priority, VBox}
 import scalafx.Includes._
+import scalafx.application.{JFXApp, Platform}
 import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination, KeyEvent}
+import scalafx.scene.Scene
+import scalafx.scene.control._
+import scalafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
+import scalafx.scene.layout._
 
 import java.time.LocalDate
 
@@ -104,7 +104,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
   }
 
-  var theme = "Green"
+  var theme: Theme = Theme.newT
   val themeBar = MenuBarTheme.get(theme)
 
 
@@ -132,9 +132,10 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
           ))
       }
 
-      pane.children.forEach( x => x.getStyleClass.add("theme") )
+      pane.children.forEach(x => x.getStyleClass.add("theme"))
+
       scene = new Scene(pane, 1200, 1000) {
-        stylesheets = List(getClass.getResource("style.css").toExternalForm)
+        stylesheets = List(getClass.getResource(s"${try {theme.get} catch { case e: Throwable => "Green"}}.css").toExternalForm)
         onKeyPressed = { e => {
           val combo = new KeyCodeCombination(KeyCode.Tab, KeyCombination.ControlDown)
           if (combo.`match`(e)) {
@@ -232,7 +233,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
       pane.children.forEach( x => x.getStyleClass.add("theme") )
 
       scene = new Scene(pane, 1000, 1000) {
-        stylesheets = List(getClass.getResource("style.css").toExternalForm)
+        stylesheets = List(getClass.getResource(s"${try {theme.get} catch { case e: Throwable => "Green"}}.css").toExternalForm)
         onKeyPressed = {
           e => {
               val combo = new KeyCodeCombination(KeyCode.Tab, KeyCombination.ControlDown)
