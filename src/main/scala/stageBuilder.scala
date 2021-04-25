@@ -11,7 +11,7 @@ import scalafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination, KeyEven
 
 import java.time.LocalDate
 
-class StageBuilder(tickers: Seq[(String, String)]) {
+class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
   val stocks: StocksToDisplay = new StocksToDisplay
   val dates: TimeData = new TimeData
@@ -133,14 +133,7 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       rbt.children.add(dataPane.getPane)
       rbt.children.add(controlBoxStock)
       rbt.children.add(controlBoxInterval)
-
-      val rbbt                     = new HBox()
-      val rbbb                     = new BorderPane()
-      rbbt.children.add(datePickerStart)
-      rbbt.children.add(datePickerEnd)
-      rbbb.setCenter(Layouts.buttonGrid(lineChart.changeTypeOfDataButton, updateButton, buttonToSetup, buttonExit))
-      rbb.setTop(rbbt)
-      rbb.setBottom(rbbb)
+      rbb.setCenter(controlPanel(dateGrid(datePickerStart, datePickerEnd), buttonGrid(lineChart.changeTypeOfDataButton, updateButton, buttonToSetup, buttonExit)))
       rb.items.add(rbt)
       rb.items.add(rbb)
       rb.orientation = scalafx.geometry.Orientation.Vertical
