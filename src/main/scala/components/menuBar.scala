@@ -3,52 +3,44 @@ package components
 import scalafx.scene.control.{Menu, MenuBar, MenuItem}
 
 class MenuBarTheme {
-  def createMenu(t: Theme): MenuBar = {
+
+  var menuOfIntrest: Option[Menu] = None
+
+  def createMenuOfIntrest(t: Theme) = {
+     menuOfIntrest = {
+       Some(new Menu("Theme") {
+                  items = List(
+                    new MenuItem("Green"),
+                    new MenuItem("Blue"),
+                    new MenuItem("Dark"),
+                    new MenuItem("Gray"),
+                    new MenuItem("Light")
+                  )
+                }
+              )
+     }
+  }
+
+  def createMenu(i: Option[Menu]): MenuBar = {
     val menu = new MenuBar {
       menus = List(
 
         new Menu("Settings") {
           mnemonicParsing = true
-          items = List(
-
-            new Menu("Theme") {
-              items = List(
-                new MenuItem("Green") {
-                  onAction = (e) => {
-                    t.changeTheme(text.value)
-                  }
-                },
-                new MenuItem("Blue") {
-                  onAction = (e) => {
-                    t.changeTheme(text.value)
-                  }
-                },
-                new MenuItem("Dark")  {
-                  onAction = (e) => {
-                    t.changeTheme(text.value)
-                  }
-                },
-                new MenuItem("Gray") {
-                  onAction = (e) => {
-                    t.changeTheme(text.value)
-                  }
-                },
-                new MenuItem("Light") {
-                  onAction = (e) => {
-                    t.changeTheme(text.value)
-                  }
-                }
-              )
-            }
-          )
+          items = List(i.get)
         })
     }
     menu
   }
 }
 object MenuBarTheme {
-  def get(t: Theme): MenuBar = {
-    val i = new MenuBarTheme
-    i.createMenu(t)
+  val thisMenu = new MenuBarTheme
+  private def init(t: Theme): Unit = {
+    thisMenu.createMenuOfIntrest(t)
   }
+  def get(t: Theme): MenuBar = {
+    init(t)
+    thisMenu.createMenu(thisMenu.menuOfIntrest)
+  }
+
 }

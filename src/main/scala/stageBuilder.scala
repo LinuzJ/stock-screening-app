@@ -38,59 +38,47 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
   val pieChart                        = Charts.pie(stockData)
   val barChart                        = Charts.bar(stockData)
   val listOfCharts: Seq[charts.Chart] = List(lineChart, pieChart, barChart)
-
-  // other Panes
   val dataPane                        = new DataPane(stockData, tickers)
 
   // date pickers
   var datePickerStart                 = new DatePicker(LocalDate.now.minusDays(5))
+  var datePickerEnd                   = new DatePicker(LocalDate.now)
+
+  // Buttons
+  val updateButton                    = new Button("Refresh")
+  val buttonToSetup                   = new Button{ text = "Change stocks" ; onAction = (e) => changeStage(false)}
+  val buttonToDashboard               = new Button{ text = "Continue to the dashboard"; onAction = (e) => { updateStage(); changeStage(true) } }
+  val buttonExit = new Button{ text = "Exit"; onAction = (e) => { Platform.exit() } }
+  // Styling for the buttons
+  updateButton.getStyleClass.add("controlPanelButton")
+  buttonToSetup.getStyleClass.add("controlPanelButton")
+  buttonToDashboard.getStyleClass.add("controlPanelButton")
+  buttonExit.getStyleClass.add("controlPanelButton")
+
+  // Control boxes
+  var controlBoxStock: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
+  val controlBoxInterval: ComboBox[String] = new ComboBox[String](List("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d",  "1wk", "1mo"))
+
+
+  // Action handling for the buttons/other interactive objects
+
   datePickerStart.onAction = (e) => {
     dates.changeDates(datePickerStart.getValue, dates.getDates("end"))
     updateStage()
   }
-  var datePickerEnd                   = new DatePicker(LocalDate.now)
   datePickerEnd.onAction = (e) => {
     dates.changeDates(dates.getDates("start"), datePickerEnd.getValue)
     updateStage()
   }
 
-  
-  val updateButton = new Button("Refresh")
-  updateButton.getStyleClass.add("controlPanelButton")
   updateButton.onAction = (e) => {
     updateStage()
   }
-
-  val buttonToSetup = new Button{
-    text = "Change stocks"
-    onAction = (e) => changeStage(false)
-  }
-  buttonToSetup.getStyleClass.add("controlPanelButton")
-
-  val buttonToDashboard = new Button{
-    text = "Continue to the dashboard"
-    onAction = (e) => {
-      updateStage()
-      changeStage(true)
-    }
-  }
-  buttonToDashboard.getStyleClass.add("controlPanelButton")
-
-  val buttonExit = new Button{
-    text = "Exit"
-    onAction = (e) => {
-      Platform.exit()
-    }
-  }
-  buttonExit.getStyleClass.add("controlPanelButton")
-
-  var controlBoxStock: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
   controlBoxStock.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
   controlBoxStock.onAction = (e) => {
     dataPane.changeStock(stockData, controlBoxStock.getValue)
     updateStage()
   }
-  val controlBoxInterval: ComboBox[String] = new ComboBox[String](List("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d",  "1wk", "1mo"))
   controlBoxInterval.getSelectionModel.select(dates.getInterval)
   controlBoxInterval.onAction = (e) => {
     try {
@@ -104,8 +92,14 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
   }
 
+
+  // Setting up the theme and menubar
   var theme: Theme = Theme.newT
-  val themeBar = MenuBarTheme.get(theme)
+  val menuBarInstance: MenuBarTheme.type = MenuBarTheme
+  val settingsBar = menuBarInstance.get(theme)
+  menuBarInstance.thisMenu.menuOfIntrest.get.items.forEach( i => i.onAction = (e) => { theme.changeTheme(i.getText) ; changeStage(!isSetup) })
+
+
 
 
   // r = RIGHT; l = LEFT; t = TOP; b = BOTTOM
@@ -119,7 +113,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
       // generate the main pane for the dashboard
       val pane = new BorderPane(){
-        top = themeBar
+        top = settingsBar
         center = renderDataDashboard(
           generateDDLeft(
             lineChart.getPane,
@@ -230,7 +224,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
       ///////////////////////////
       c.items.add(r)
       ///////////////////////////
-      pane.setTop(themeBar)
+      pane.setTop(settingsBar)
       pane.setCenter(c)
       pane.children.forEach( x => x.getStyleClass.add("theme") )
 

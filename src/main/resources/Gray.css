@@ -1,0 +1,76 @@
+/*
+Color palette:
+ DARK       = #424242 =>  #424242
+ MEDIUM     = #848484 =>  #848484
+ LIGHT      = #b0b0b0 =>  #b0b0b0
+ IN BETWEEN = #c6c6c6 =>  #c6c6c6
+ LIIIGHT    = #e3e3e3 =>  #e3e3e3
+ BACKGROUND = #DCDCDC =>
+*/
+.controlPanelButton {
+  -fx-display: block;
+  -fx-width: 100%;
+  -fx-height: 70px;
+  -fx-border: none;
+  -fx-background-color: #b0b0b0;
+  -fx-color: black;
+  -fx-border-radius: 4px;
+  -fx-border-color: #848484;
+  -fx-text-align: center;
+  -fx-text-decoration: none;
+  -fx-display: inline-block;
+  -fx-font-size: 16px;
+}
+.controlPanelButton:hover {
+  -fx-background-color: #424242;
+}
+.tickerDisplay {
+  -fx-display: block;
+  -fx-border: none;
+  -fx-background-color: #b0b0b0;
+  -fx-color: #333333;
+  -fx-border-radius: 6px;
+  -fx-border-color: #848484;
+  -fx-text-align: center;
+  -fx-text-decoration: none;
+  -fx-display: inline-block;
+  -fx-font-size: 18px;
+  -fx-spacing: 20;
+  -fx-padding: 20;
+  -fx-margin: 20;
+}
+
+.theme {
+  -fx-background: #DCDCDC;
+  -fx-font-family: system-ui;
+}
+.dateLabel {
+  -fx-font-size: 18px;
+}
+.ButtonLabel {
+  -fx-font-size: 22px;
+}
+.ButtonLabel:hover {
+  -fx-text-fill: #cc2900;
+}
+
+.list-viw {
+  -fx-font-size: 18px;
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: #DCDCDC;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: #c6c6c6;
+}
+.list-view .list-cell:selected:odd,
+.list-view .list-cell:selected:even {
+    -fx-background-color: #424242;
+}
+.flowpane {
+  -fx-spacing: 10;
+  -fx-padding: 10;
+  -fx-margin: 10;
+}
