@@ -1,7 +1,7 @@
 ****************************************************
 17.3 Report
 
-Not much has been done. I've implemented the data parseing functionalty but have not yet started creating the data plotting classes/ objects.
+Not much has been done. I've implemented the data parsing functionality but have not yet started creating the data plotting classes/ objects.
 I'm going to start playing around with different ideas as soon as possible to get the graph funcionality up and runnig
 
 ****************************************************

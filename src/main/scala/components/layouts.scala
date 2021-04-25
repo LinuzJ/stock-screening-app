@@ -8,31 +8,31 @@ class Layouts {
   
   def buttonGrid(lt: Button, lb: Button, rt: Button, rb: Button): BorderPane = {
     val l = {
-          val i = new VBox(15, lt, lb)
-          VBox.setMargin(i, Insets(10, 10, 10, 10))
-          i.setAlignment(Pos.Center)
           VBox.setVgrow(lt, Priority.Always)
           VBox.setVgrow(lb, Priority.Always)
           lb.setMaxSize(Double.MaxValue, Double.MaxValue)
           lt.setMaxSize(Double.MaxValue, Double.MaxValue)
+          val i = new VBox(10, lt, lb)
+          VBox.setMargin(i, Insets(10, 10, 10, 10))
+          i.setAlignment(Pos.Center)
         i
       }
     val r = {
-          val i = new VBox(15, rt, rb)
-          VBox.setMargin(i, Insets(10, 10, 10, 10))
-          i.setAlignment(Pos.Center)
-          VBox.setVgrow(rt, Priority.Always)
           VBox.setVgrow(rb, Priority.Always)
+          VBox.setVgrow(rt, Priority.Always)
           lb.setMaxSize(Double.MaxValue, Double.MaxValue)
           lt.setMaxSize(Double.MaxValue, Double.MaxValue)
+          val i = new VBox(10, rt, rb)
+          VBox.setMargin(i, Insets(10, 10, 10, 10))
+          i.setAlignment(Pos.Center)
         i
     }
-    val hBox: HBox = new HBox(15, l, r)
-    hBox.setAlignment(Pos.Center)
     HBox.setHgrow(l, Priority.Always)
     HBox.setHgrow(r, Priority.Always)
     l.setMaxSize(Double.MaxValue, Double.MaxValue)
     r.setMaxSize(Double.MaxValue, Double.MaxValue)
+    val hBox: HBox = new HBox(10, l, r)
+    hBox.setAlignment(Pos.Center)
     new BorderPane(){
       center = hBox
     }
@@ -44,44 +44,44 @@ class Layouts {
     lt.getStyleClass.add("dateLabel")
     rt.getStyleClass.add("dateLabel")
     val l = {
-          val i = new VBox(15, lt, lb)
-          VBox.setMargin(i, Insets(10, 10, 10, 10))
-          i.setAlignment(Pos.Center)
           VBox.setVgrow(lt, Priority.Always)
           VBox.setVgrow(lb, Priority.Always)
           lb.setMaxSize(Double.MaxValue, Double.MaxValue)
           lt.setMaxSize(Double.MaxValue, Double.MaxValue)
+          val i = new VBox(10, lt, lb)
+          VBox.setMargin(i, Insets(10, 10, 10, 10))
+          i.setAlignment(Pos.Center)
         i
       }
     val r = {
-          val i = new VBox(15, rt, rb)
-          VBox.setMargin(i, Insets(10, 10, 10, 10))
-          i.setAlignment(Pos.Center)
           VBox.setVgrow(rt, Priority.Always)
           VBox.setVgrow(rb, Priority.Always)
           lb.setMaxSize(Double.MaxValue, Double.MaxValue)
           lt.setMaxSize(Double.MaxValue, Double.MaxValue)
+          val i = new VBox(10, rt, rb)
+          VBox.setMargin(i, Insets(10, 10, 10, 10))
+          i.setAlignment(Pos.Center)
         i
     }
-    val hBox: HBox = new HBox(15, l, r)
-    hBox.setAlignment(Pos.Center)
     HBox.setHgrow(l, Priority.Always)
     HBox.setHgrow(r, Priority.Always)
     l.setMaxSize(Double.MaxValue, Double.MaxValue)
     r.setMaxSize(Double.MaxValue, Double.MaxValue)
+    val hBox: HBox = new HBox(10, l, r)
+    hBox.setAlignment(Pos.Center)
     new BorderPane(){
       center = hBox
     }
   }
 
   def controlPanel(t: BorderPane, b: BorderPane): BorderPane = {
-    val vBox = new VBox(15, t, b)
-    VBox.setMargin(vBox, Insets(10, 10, 10, 10))
-    vBox.setAlignment(Pos.Center)
     VBox.setVgrow(t, Priority.Always)
     VBox.setVgrow(b, Priority.Always)
     t.setMaxSize(Double.MaxValue, Double.MaxValue)
     b.setMaxSize(Double.MaxValue, Double.MaxValue)
+    val vBox = new VBox(10, t, b)
+    VBox.setMargin(vBox, Insets(10, 10, 10, 10))
+    vBox.setAlignment(Pos.Center)
     new BorderPane(){
       center = vBox
     }
@@ -89,19 +89,18 @@ class Layouts {
 
 
   def dataPanel(t: BorderPane, bl: ComboBox[String], br: ComboBox[String]): BorderPane = {
-    val b: HBox = new HBox( bl, br)
-    b.setAlignment(Pos.Center)
+
     HBox.setHgrow(bl, Priority.Always)
     HBox.setHgrow(br, Priority.Always)
     bl.setMaxSize(Double.MaxValue, Double.MaxValue)
     br.setMaxSize(Double.MaxValue, Double.MaxValue)
+    val b: HBox = new HBox(bl, br)
+    b.setAlignment(Pos.Center)
 
     val i = new VBox( t, b)
     i.setAlignment(Pos.Center)
-    VBox.setVgrow(t, Priority.Always)
-    VBox.setVgrow(b, Priority.Always)
-    b.setMaxSize(Double.MaxValue, Double.MaxValue)
-    t.setMaxSize(Double.MaxValue, Double.MaxValue)
+    VBox.setVgrow(i, Priority.Always)
+    i.setMaxSize(Double.MaxValue, Double.MaxValue)
     new BorderPane(){
       center = i
     }

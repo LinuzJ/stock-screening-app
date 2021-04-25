@@ -35,7 +35,6 @@ class DataPane(inputData: Seq[(String, Data)], t: Seq[(String, String)]) {
         center = new ListView(labels2Add)
       }
     } else {
-      println("error")
        new BorderPane(){
         center = new ListView()
       }

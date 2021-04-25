@@ -3,7 +3,6 @@ import components._
 import data.{Data, TimeData}
 import scalafx.Includes._
 import scalafx.application.{JFXApp, Platform}
-import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
 import scalafx.scene.control._
 import scalafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
@@ -39,7 +38,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
   val barChart                        = Charts.bar(stockData)
   val listOfCharts: Seq[charts.Chart] = List(lineChart, pieChart, barChart)
   val dataPane                        = new DataPane(stockData, tickers)
-  val listView: ListView[String] = new ListView(tickers.map(_._1))
+  val listView: ListView[String]      = new ListView(tickers.map(_._1))
 
   // date pickers
   var datePickerStart                 = new DatePicker(LocalDate.now.minusDays(5))
@@ -47,10 +46,10 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
   // Buttons
   val updateButton                    = new Button("Refresh")
-  val buttonToSetup                   = new Button{ text = "Change stocks" ; onAction = (e) => changeStage(false)}
+  val buttonToSetup                   = new Button{ text = "Change stocks" ;            onAction = (e) => changeStage(false) }
   val buttonToDashboard               = new Button{ text = "Continue to the dashboard"; onAction = (e) => { updateStage(); changeStage(true) } }
-  val buttonExit = new Button{ text = "Exit"; onAction = (e) => { Platform.exit() } }
-  val buttonAdd = new Button("ADD")
+  val buttonExit                      = new Button{ text = "Exit";                      onAction = (e) => { Platform.exit() } }
+  val buttonAdd                       = new Button("ADD")
   // Styling for the buttons
   updateButton.getStyleClass.add("controlPanelButton")
   buttonToSetup.getStyleClass.add("controlPanelButton")
@@ -60,8 +59,8 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
   listView.getStyleClass.add("list-view")
 
   // Control boxes
-  var controlBoxStock: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
-  val controlBoxInterval: ComboBox[String] = new ComboBox[String](List("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d",  "1wk", "1mo"))
+  var controlBoxStock: ComboBox[String]     = new ComboBox[String](stockData.map(_._1))
+  val controlBoxInterval: ComboBox[String]  = new ComboBox[String](List("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d",  "1wk", "1mo"))
 
 
   // Action handling for the buttons/other interactive objects
@@ -113,11 +112,9 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
   // Setting up the theme and menubar
   var theme: Theme = Theme.newT
-  val menuBarInstance: MenuBarTheme.type = MenuBarTheme
+  val menuBarInstance: MenuBarTheme.type     = MenuBarTheme
   val settingsBar = menuBarInstance.get(theme)
   menuBarInstance.thisMenu.menuOfIntrest.get.items.forEach( i => i.onAction = (e) => { theme.changeTheme(i.getText) ; changeStage(!isSetup) })
-
-
 
 
   // r = RIGHT; l = LEFT; t = TOP; b = BOTTOM

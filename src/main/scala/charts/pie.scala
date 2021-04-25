@@ -9,10 +9,11 @@ import scalafx.util.Duration
 class Pie(inputData: Seq[(String, Data)]) extends Chart {
 
   var currentData: Seq[(String, Data)] = inputData
+
   var thisChart: PieChart = {
     val newPieChart = new PieChart {
-    title = "Total Volume"
-    data = ObservableBuffer(currentData.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))
+      title = "Total Volume"
+      data = ObservableBuffer(currentData.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))
     }
     val totalVolume = { var i: Long = 0; newPieChart.getData.forEach(x => i += x.getPieValue.toLong); i }
     newPieChart.getData.forEach(i => {
@@ -31,7 +32,10 @@ class Pie(inputData: Seq[(String, Data)]) extends Chart {
 
   // creation of the chart
   private def updateChart(): Unit = {
-    thisChart.data.update(ObservableBuffer(currentData.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2))))
+    thisChart = new PieChart {
+      title = "Total Volume"
+      data = ObservableBuffer(currentData.map(pair => (pair._1, pair._2.getVolumeTotal)).map(x => PieChart.Data(x._1, x._2)))
+    }
     val totalVolume = { var i: Long = 0; thisChart.getData.forEach(x => i += x.getPieValue.toLong); i }
     thisChart.getData.forEach(i => {
           Tooltip.install(

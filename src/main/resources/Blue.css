@@ -8,16 +8,11 @@ Color palette:
  BACKGROUND = #DCDCDC =>
 */
 .controlPanelButton {
-  -fx-display: block;
-  -fx-width: 100%;
-  -fx-height: 70px;
-  -fx-border: none;
   -fx-background-color: #59599c;
   -fx-color: black;
   -fx-border-radius: 4px;
   -fx-border-color: #829081;
   -fx-text-align: center;
-  -fx-text-decoration: none;
   -fx-display: inline-block;
   -fx-font-size: 16px;
 }
@@ -25,15 +20,12 @@ Color palette:
   -fx-background-color: #000066;
 }
 .tickerDisplay {
-  -fx-display: block;
-  -fx-border: none;
+  -fx-border: solid;
   -fx-background-color: #59599c;
   -fx-color: #333333;
-  -fx-border-radius: 6px;
+  -fx-border-radius: 4px;
   -fx-border-color: #829081;
   -fx-text-align: center;
-  -fx-text-decoration: none;
-  -fx-display: inline-block;
   -fx-font-size: 18px;
   -fx-spacing: 20;
   -fx-padding: 20;
@@ -54,10 +46,6 @@ Color palette:
   -fx-text-fill: #cc2900;
 }
 
-.list-viw {
-  -fx-font-size: 18px;
-}
-
 .list-view .list-cell:odd {
     -fx-background-color: #DCDCDC;
 }
@@ -74,3 +62,8 @@ Color palette:
   -fx-padding: 10;
   -fx-margin: 10;
 }
+
+.list-cell {
+  -fx-font-size: 18px;
+}
+
