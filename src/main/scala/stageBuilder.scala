@@ -46,13 +46,13 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
   // Buttons
   val updateButton                    = new Button("Refresh")
-  val buttonToSetup                   = new Button{ text = "Change stocks" ;            onAction = (e) => changeStage(false) }
   val buttonToDashboard               = new Button{ text = "Continue to the dashboard"; onAction = (e) => { updateStage(); changeStage(true) } }
+  val buttonToSetupStage              = new Button{ text = "Back to Setup";             onAction = (e) => { changeStage(false) } }
   val buttonExit                      = new Button{ text = "Exit";                      onAction = (e) => { Platform.exit() } }
   val buttonAdd                       = new Button("ADD")
   // Styling for the buttons
   updateButton.getStyleClass.add("controlPanelButton")
-  buttonToSetup.getStyleClass.add("controlPanelButton")
+  buttonToSetupStage.getStyleClass.add("controlPanelButton")
   buttonToDashboard.getStyleClass.add("controlPanelButton")
   buttonExit.getStyleClass.add("controlPanelButton")
   buttonAdd.getStyleClass.add("controlPanelButton")
@@ -137,7 +137,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
           generateDDRight(
             pieChart.getPane,
             dataPanel(dataPane.getPane, controlBoxStock, controlBoxInterval),
-            controlPanel(dateGrid(datePickerStart, datePickerEnd), buttonGrid(lineChart.changeTypeOfDataButton, updateButton, buttonToSetup, buttonExit))
+            controlPanel(dateGrid(datePickerStart, datePickerEnd), buttonGrid(lineChart.changeTypeOfDataButton, buttonToSetupStage, updateButton, buttonExit))
           )
         )
       }
