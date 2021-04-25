@@ -1,21 +1,25 @@
 package components
 
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.HBox
 
-class TickerDisplayBox(ticker: String) {
-  val pane: HBox        = new HBox
-  pane.getStyleClass.add("controlPanelButton")
+class TickerDisplayBox(t: String) {
 
-  val label: Label      = new Label(ticker)
-  val button: Button    = new Button("X")
 
-  button.setPrefSize(20, 20)
-  pane.children.add(label)
-  pane.children.add(button)
+    val label: Label      = new Label(t)
+    val button: Label    = new Label("X")
+    button.getStyleClass.add("ButtonLabel")
 
-  def getBox: HBox = {
-    pane
+
+    val pane: HBox         = new HBox(10, label, button)
+    pane.getStyleClass.add("tickerDisplay")
+    pane.setAlignment(Pos.Center)
+
+    def getBox: HBox = pane
+}
+object TickerDisplayBox {
+  def get(t: String) = {
+    new TickerDisplayBox(t)
   }
 }
-

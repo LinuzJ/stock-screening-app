@@ -163,6 +163,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
       ///////////////////////////
 
       val listView: ListView[String] = new ListView(tickers.map(_._1))
+      listView.getStyleClass.add("list-view")
       // Left Side of the Split
       ///////////////////////////
       c.items.add{
@@ -192,13 +193,14 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
       // Right Side of the Split
       ///////////////////////////
       val rt = new FlowPane()
+      rt.getStyleClass.add("flowpane")
       rt.setVgap(10)
       rt.setHgap(10)
       rt.getStyleClass.add("splitRightTopInside")
       stockData.foreach{
         stock => {
-          val boxObject = new TickerDisplayBox(stock._1)
-          boxObject.button.onAction = (e) => {
+          val boxObject = TickerDisplayBox.get(stock._1)
+          boxObject.button.onMouseClicked = (e) => {
             stocks.changeStocks{
               stockData.filter(x => x._1 != boxObject.label.getText).map(_._1)
             }

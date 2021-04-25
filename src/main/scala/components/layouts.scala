@@ -109,7 +109,7 @@ class Layouts {
 
   def renderDataDashboard(l: SplitPane, r: SplitPane): SplitPane = {
       val c = new SplitPane()
-      c.dividerPositions = 0.7
+      c.dividerPositions = 0.65
       c.items.add(l)
       c.items.add(r)
       c.orientation = scalafx.geometry.Orientation.Horizontal
