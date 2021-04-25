@@ -25,7 +25,7 @@ class StageBuilderTest {
 
     }
 
-
+    @Test
     def testButtonToDashboard(robot: FxRobot): Unit = {
 
         gui match {

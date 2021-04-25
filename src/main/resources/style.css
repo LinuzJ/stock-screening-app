@@ -40,6 +40,7 @@ Color palette:
 .controlPanelButton:hover {
   -fx-color: white;
   -fx-border-color: #38686A;
+  -fx-border: solid;
 
 }
 .splitRightTopInside {
@@ -49,4 +50,8 @@ Color palette:
 }
 .theme {
   -fx-background: #DCDCDC;
+  -fx-font-family: system-ui;
+}
+.dateLabel {
+  -fx-font-size: 18px;
 }

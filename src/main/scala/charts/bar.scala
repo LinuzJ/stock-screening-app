@@ -39,6 +39,7 @@ class Bar(inputData: Seq[(String, Data)]) extends Chart {
       barChart
   }
   private def updateChart(): Unit = {
+    thisChart.setTitle("Volume over specific timeperiod")
     // new sequence of series with the new data
     val newSeries = createSeries(currentData).map(_.delegate)
     thisChart.data.set(ObservableBuffer(newSeries))

@@ -1,5 +1,5 @@
 import charts.Charts
-import components.{DataPane, ErrorPopup, Layouts, StocksToDisplay, TickerDisplayBox, TickerListPane}
+import components.{DataPane, ErrorPopup, Layouts, MenuBarTheme, StocksToDisplay, TickerDisplayBox, TickerListPane}
 import data.{Data, TimeData}
 import scalafx.application.{JFXApp, Platform}
 import scalafx.scene.Scene
@@ -104,6 +104,9 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
   }
 
+  var theme = "Green"
+  val themeBar = MenuBarTheme.get(theme)
+
 
   // r = RIGHT; l = LEFT; t = TOP; b = BOTTOM
   def StockStage: JFXApp.PrimaryStage = {
@@ -113,45 +116,22 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
     new JFXApp.PrimaryStage {
 
       title.value = "Data dashboard"
-      val pane = new BorderPane()
 
-      ////////////////////////////////
-      val l = new SplitPane()
-      l.items.add{ new BorderPane(){ center     = lineChart.getPane } }
-      l.items.add{ new BorderPane(){ center     = barChart.getPane } }
-      l.orientation = scalafx.geometry.Orientation.Vertical
-      ////////////////////////////////
+      // generate the main pane for the dashboard
+      val pane = new BorderPane(){
+        top = themeBar
+        center = renderDataDashboard(
+          generateDDLeft(
+            lineChart.getPane,
+            barChart.getPane
+          ),
+          generateDDRight(
+            pieChart.getPane,
+            dataPanel(dataPane.getPane, controlBoxStock, controlBoxInterval),
+            controlPanel(dateGrid(datePickerStart, datePickerEnd), buttonGrid(lineChart.changeTypeOfDataButton, updateButton, buttonToSetup, buttonExit))
+          ))
+      }
 
-      ////////////////////////////////
-      val r = new SplitPane()
-      //--------------------------------
-      val rt = new BorderPane(){ center = pieChart.getPane }
-      //--------------------------------
-      val rb = new SplitPane()
-      val rbt = new VBox()
-      val rbb = new BorderPane()
-      rbt.children.add(dataPane.getPane)
-      rbt.children.add(controlBoxStock)
-      rbt.children.add(controlBoxInterval)
-      rbb.setCenter(controlPanel(dateGrid(datePickerStart, datePickerEnd), buttonGrid(lineChart.changeTypeOfDataButton, updateButton, buttonToSetup, buttonExit)))
-      rb.items.add(rbt)
-      rb.items.add(rbb)
-      rb.orientation = scalafx.geometry.Orientation.Vertical
-      //--------------------------------
-      r.items.add(rt)
-      r.items.add(rb)
-      r.orientation = scalafx.geometry.Orientation.Vertical
-      ////////////////////////////////
-
-      ////////////////////////////////
-      val c = new SplitPane()
-      c.dividerPositions = 0.6
-      c.items.add(l)
-      c.items.add(r)
-      c.orientation = scalafx.geometry.Orientation.Horizontal
-      ////////////////////////////////
-
-      pane.setCenter(c)
       pane.children.forEach( x => x.getStyleClass.add("theme") )
       scene = new Scene(pane, 1200, 1000) {
         stylesheets = List(getClass.getResource("style.css").toExternalForm)
@@ -247,7 +227,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
       ///////////////////////////
       c.items.add(r)
       ///////////////////////////
-
+      pane.setTop(themeBar)
       pane.setCenter(c)
       pane.children.forEach( x => x.getStyleClass.add("theme") )
 
