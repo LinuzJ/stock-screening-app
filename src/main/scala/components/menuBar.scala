@@ -12,7 +12,6 @@ class MenuBarTheme {
                   items = List(
                     new MenuItem("Green"),
                     new MenuItem("Blue"),
-                    new MenuItem("Dark"),
                     new MenuItem("Gray"),
                     new MenuItem("Light")
                   )

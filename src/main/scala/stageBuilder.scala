@@ -39,6 +39,7 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
   val barChart                        = Charts.bar(stockData)
   val listOfCharts: Seq[charts.Chart] = List(lineChart, pieChart, barChart)
   val dataPane                        = new DataPane(stockData, tickers)
+  val listView: ListView[String] = new ListView(tickers.map(_._1))
 
   // date pickers
   var datePickerStart                 = new DatePicker(LocalDate.now.minusDays(5))
@@ -49,11 +50,14 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
   val buttonToSetup                   = new Button{ text = "Change stocks" ; onAction = (e) => changeStage(false)}
   val buttonToDashboard               = new Button{ text = "Continue to the dashboard"; onAction = (e) => { updateStage(); changeStage(true) } }
   val buttonExit = new Button{ text = "Exit"; onAction = (e) => { Platform.exit() } }
+  val buttonAdd = new Button("ADD")
   // Styling for the buttons
   updateButton.getStyleClass.add("controlPanelButton")
   buttonToSetup.getStyleClass.add("controlPanelButton")
   buttonToDashboard.getStyleClass.add("controlPanelButton")
   buttonExit.getStyleClass.add("controlPanelButton")
+  buttonAdd.getStyleClass.add("controlPanelButton")
+  listView.getStyleClass.add("list-view")
 
   // Control boxes
   var controlBoxStock: ComboBox[String] = new ComboBox[String](stockData.map(_._1))
@@ -73,6 +77,20 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
 
   updateButton.onAction = (e) => {
     updateStage()
+  }
+  buttonAdd.onAction = (e) => {
+    val tick = listView.selectionModel().getSelectedItem
+    val tickersMap = tickers.toMap
+    try {
+      if (!stocks.getStocks.contains(tickersMap(tick))) {
+        stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
+        changeStage(false)
+      } else {
+        ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
+      }
+    } catch {
+      case e: Throwable => ErrorPopup.getPopup("Error", "Reminder!", "You have to click on the company name that you want to add before clicking add! HINT: You can also press the button A to add a ticker! ", stageVariable)
+    }
   }
   controlBoxStock.getSelectionModel.select({ try { stockData.head._1 } catch { case e: Throwable => "" } })
   controlBoxStock.onAction = (e) => {
@@ -123,7 +141,8 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
             pieChart.getPane,
             dataPanel(dataPane.getPane, controlBoxStock, controlBoxInterval),
             controlPanel(dateGrid(datePickerStart, datePickerEnd), buttonGrid(lineChart.changeTypeOfDataButton, updateButton, buttonToSetup, buttonExit))
-          ))
+          )
+        )
       }
 
       pane.children.forEach(x => x.getStyleClass.add("theme"))
@@ -147,50 +166,10 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
     isSetup = true
 
     new JFXApp.PrimaryStage {
+
       title.value = "Setup"
-      val pane = new BorderPane()
 
-
-      // MainSplit
-      ///////////////////////////
-      val c = new SplitPane()
-      ///////////////////////////
-
-      val listView: ListView[String] = new ListView(tickers.map(_._1))
-      listView.getStyleClass.add("list-view")
-      // Left Side of the Split
-      ///////////////////////////
-      c.items.add{
-        new BorderPane(){
-          center = listView
-        }
-      }
-      val buttonAdd = new Button("ADD")
-      buttonAdd.getStyleClass.add("controlPanelButton")
-      buttonAdd.onAction = (e) => {
-        val tick = listView.selectionModel().getSelectedItem
-        val tickersMap = tickers.toMap
-        try {
-          if (!stocks.getStocks.contains(tickersMap(tick))) {
-            stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
-            changeStage(false)
-          } else {
-            ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
-          }
-        } catch {
-          case e: Throwable => ErrorPopup.getPopup("Error", "Reminder!", "You have to click on the company name that you want to add before clicking add! HINT: You can also press the button A to add a ticker! ", stageVariable)
-        }
-      }
-      ///////////////////////////
-
-
-      // Right Side of the Split
-      ///////////////////////////
-      val rt = new FlowPane()
-      rt.getStyleClass.add("flowpane")
-      rt.setVgap(10)
-      rt.setHgap(10)
-      rt.getStyleClass.add("splitRightTopInside")
+      val rightTop = renderFlow
       stockData.foreach{
         stock => {
           val boxObject = TickerDisplayBox.get(stock._1)
@@ -200,32 +179,21 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
             }
             changeStage(false)
           }
-          rt.children += boxObject.getBox
+          rightTop.children += boxObject.getBox
         }
       }
-      val bBox: HBox = new HBox(10, buttonToDashboard, buttonExit)
-      bBox.setAlignment(Pos.Center)
-      HBox.setHgrow(buttonToDashboard, Priority.Always)
-      HBox.setHgrow(buttonExit, Priority.Always)
-      VBox.setVgrow(buttonAdd, Priority.Always)
-      buttonToDashboard.setMaxSize(Double.MaxValue, Double.MaxValue)
-      buttonExit.setMaxSize(Double.MaxValue, Double.MaxValue)
-      buttonAdd.setMaxSize(Double.MaxValue, Double.MaxValue)
 
-      val bVBox: VBox = new VBox(15, buttonAdd, bBox)
-      VBox.setMargin(bVBox, Insets(15, 15, 15, 15))
 
-      val r = new BorderPane(){
-        top        = rt
-        bottom     = bVBox
+      val pane = new BorderPane(){
+        top     = settingsBar
+        center  = renderSetup(
+                    listView,
+                    new BorderPane(){
+                      top = rightTop
+                      bottom = buttonGrid(buttonToDashboard, buttonExit, buttonAdd)
+                  })
       }
-      ///////////////////////////
 
-      ///////////////////////////
-      c.items.add(r)
-      ///////////////////////////
-      pane.setTop(settingsBar)
-      pane.setCenter(c)
       pane.children.forEach( x => x.getStyleClass.add("theme") )
 
       scene = new Scene(pane, 1000, 1000) {
@@ -255,7 +223,6 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
         }
       }
     }
-
   }
 
   // stage initially set to the SetupStage

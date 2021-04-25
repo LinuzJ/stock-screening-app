@@ -2,7 +2,7 @@ package components
 
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.{Button, ComboBox, DatePicker, Label, ListView, SplitPane}
-import scalafx.scene.layout.{BorderPane, HBox, Priority, VBox}
+import scalafx.scene.layout.{BorderPane, FlowPane, HBox, Priority, VBox}
 
 class Layouts {
   
@@ -140,6 +140,39 @@ class Layouts {
       l.items.add{ new BorderPane(){ center     = bar} }
       l.orientation = scalafx.geometry.Orientation.Vertical
       l
+  }
+  
+  def renderSetup(l: ListView[String], r: BorderPane): SplitPane = {
+      val c = new SplitPane()
+      c.items.add(l)
+      c.items.add(r)
+      c.orientation = scalafx.geometry.Orientation.Horizontal
+      c
+  }
+  
+  def renderFlow: FlowPane = {
+      val rt = new FlowPane()
+      rt.getStyleClass.add("flowpane")
+      rt.setVgap(10)
+      rt.setHgap(10)
+      rt.getStyleClass.add("splitRightTopInside")
+      rt
+  }
+  
+  def buttonGrid(b2d: Button, b2e: Button, b2a: Button): VBox = {
+    val bBox: HBox = new HBox(10, b2d, b2e)
+
+      bBox.setAlignment(Pos.Center)
+      HBox.setHgrow(b2d, Priority.Always)
+      HBox.setHgrow(b2e, Priority.Always)
+      VBox.setVgrow(b2a, Priority.Always)
+      b2d.setMaxSize(Double.MaxValue, Double.MaxValue)
+      b2e.setMaxSize(Double.MaxValue, Double.MaxValue)
+      b2a.setMaxSize(Double.MaxValue, Double.MaxValue)
+
+    val i: VBox = new VBox(15, b2a, bBox)
+    VBox.setMargin(i, Insets(15, 15, 15, 15))
+      i
   }
 
 }
