@@ -124,6 +124,7 @@ class Layouts {
 
   def generateDDRight(pie: BorderPane, dataPanel: BorderPane, controlPanel: BorderPane): SplitPane = {
       val r = new SplitPane()
+      r.dividerPositions = 0.6
       //--------------------------------
       val rt = new BorderPane(){ center = pie }
       //--------------------------------

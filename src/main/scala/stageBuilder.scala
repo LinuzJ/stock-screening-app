@@ -106,7 +106,6 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
       }
     }
     updateStage()
-
   }
 
 
@@ -237,9 +236,12 @@ class StageBuilder(tickers: Seq[(String, String)]) extends Layouts {
   }
 
   def updateStage(): Unit = {
+    // load new data
     stockData = buildData(stocks.getStocks).get
+
+    val lastDisplayed: String = { try { controlBoxStock.getSelectionModel.getSelectedItem } catch { case e: Throwable => { try { stockData.head._1 } catch { case e: Throwable => "" } } } }
     controlBoxStock = new ComboBox[String](stockData.map(_._1))
-    controlBoxStock.getSelectionModel.select({ try { controlBoxStock.getValue } catch { case e: Throwable => "" } })
+    controlBoxStock.getSelectionModel.select(lastDisplayed)
     controlBoxStock.onAction = (e) => {
       dataPane.changeStock(stockData, controlBoxStock.getValue)
       updateStage()
