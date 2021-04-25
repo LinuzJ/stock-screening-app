@@ -11,7 +11,7 @@ class DataPane(inputData: Seq[(String, Data)], t: Seq[(String, String)]) {
 
   private var thisPane: BorderPane = createPane(inputData)
 
-  def update(input: Seq[(String, Data)]): Unit = { s2d = Some(input.head._1); thisPane = createPane(input) }
+  def update(input: Seq[(String, Data)]): Unit = { try { s2d = Some(input.head._1) } catch { case e: NoSuchElementException =>  } ; thisPane = createPane(input) }
 
   def changeStock(input: Seq[(String, Data)], ticker: String): Unit = { s2d = Some(ticker); thisPane = createPane(input) }
 

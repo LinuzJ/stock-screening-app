@@ -201,11 +201,15 @@ class StageBuilder(tickers: Seq[(String, String)]) {
       buttonAdd.onAction = (e) => {
         val tick = listView.selectionModel().getSelectedItem
         val tickersMap = tickers.toMap
-        if (!stocks.getStocks.contains(tickersMap(tick))) {
-          stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
-          changeStage(false)
-        } else {
-          ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
+        try {
+          if (!stocks.getStocks.contains(tickersMap(tick))) {
+            stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
+            changeStage(false)
+          } else {
+            ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
+          }
+        } catch {
+          case e: Throwable => ErrorPopup.getPopup("Error", "Reminder!", "You have to click on the company name that you want to add before clicking add! HINT: You can also press the button A to add a ticker! ", stageVariable)
         }
       }
       ///////////////////////////
@@ -266,11 +270,15 @@ class StageBuilder(tickers: Seq[(String, String)]) {
               } else if (e.getCode == KeyCode.A.delegate) {
                 val tick = listView.selectionModel().getSelectedItem
                 val tickersMap = tickers.toMap
-                if (!stocks.getStocks.contains(tickersMap(tick))) {
-                  stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
-                  changeStage(false)
-                } else {
-                  ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
+                try {
+                  if (!stocks.getStocks.contains(tickersMap(tick))) {
+                    stocks.changeStocks(stocks.getStocks :+ (tickersMap(tick)))
+                    changeStage(false)
+                  } else {
+                    ErrorPopup.getPopup("Error", "Error while adding ticker!", "This ticker has already been added, please choose another one.", stageVariable)
+                  }
+                } catch {
+                  case e: Throwable => ErrorPopup.getPopup("Error", "Reminder!", "You have to click on the company name that you want to add before clicking add! HINT: You can also press the button A to add a ticker! ", stageVariable)
                 }
               }
           }
