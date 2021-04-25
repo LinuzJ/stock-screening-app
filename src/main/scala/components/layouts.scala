@@ -25,8 +25,8 @@ class Layouts {
     val r = {
           VBox.setVgrow(rb, Priority.Always)
           VBox.setVgrow(rt, Priority.Always)
-          lb.setMaxSize(Double.MaxValue, Double.MaxValue)
-          lt.setMaxSize(Double.MaxValue, Double.MaxValue)
+          rb.setMaxSize(Double.MaxValue, Double.MaxValue)
+          rt.setMaxSize(Double.MaxValue, Double.MaxValue)
           val i = new VBox(10, rt, rb)
           VBox.setMargin(i, Insets(10, 10, 10, 10))
           i.setAlignment(Pos.Center)
