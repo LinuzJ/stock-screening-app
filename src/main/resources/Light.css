@@ -1,0 +1,74 @@
+/*
+Color palette:
+ DARK       = #b0b0b0=>  #b0b0b0
+ MEDIUM     = #c6c6c6 =>  #c6c6c6
+ LIGHT      = #ededed =>  #ededed
+ IN BETWEEN = #f8f8f8 =>  #f8f8f8
+ LIIIGHT    = #ffffff =>  #ffffff
+ BACKGROUND = #DCDCDC =>
+*/
+* {
+  -fx-text-fill: black;
+}
+.controlPanelButton {
+  -fx-background-color: #ededed;
+  -fx-color: black;
+  -fx-border-radius: 4px;
+  -fx-border-color: #c6c6c6;
+  -fx-text-align: center;
+  -fx-display: inline-block;
+  -fx-font-size: 16px;
+}
+.controlPanelButton:hover {
+  -fx-background-color: #38686A;
+}
+.tickerDisplay {
+  -fx-display: block;
+  -fx-border: none;
+  -fx-background-color: #ededed;
+  -fx-color: #333333;
+  -fx-border-radius: 6px;
+  -fx-border-color: #c6c6c6;
+  -fx-text-align: center;
+  -fx-text-decoration: none;
+  -fx-display: inline-block;
+  -fx-font-size: 18px;
+  -fx-spacing: 20;
+  -fx-padding: 20;
+  -fx-margin: 20;
+}
+
+.theme {
+  -fx-background: #DCDCDC;
+  -fx-font-family: system-ui;
+}
+.dateLabel {
+  -fx-font-size: 18px;
+}
+.ButtonLabel {
+  -fx-font-size: 22px;
+}
+.ButtonLabel:hover {
+  -fx-text-fill: #cc2900;
+}
+
+
+.list-view .list-cell:odd {
+    -fx-background-color: #DCDCDC;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: #f8f8f8;
+}
+.list-view .list-cell:selected:odd,
+.list-view .list-cell:selected:even {
+    -fx-background-color: #38686A;
+}
+.flowpane {
+  -fx-spacing: 10;
+  -fx-padding: 10;
+  -fx-margin: 10;
+}
+.list-cell {
+  -fx-font-size: 18px;
+}

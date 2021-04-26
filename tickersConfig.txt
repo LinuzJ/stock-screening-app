@@ -1,0 +1,41 @@
+# Write the name of the company and ticker here
+# e.g. Compan Name-TICKER
+Apple-AAPL
+Bank of America-BAC
+Advanced Micro Devices (AMD)-AMD
+Palantir-PLTR
+General Electric-GE
+Tesla-TSLA
+Alibaba-BABA
+Nokia-NOK
+Wells Fargo-WFC
+American Express-AXP
+Amazon-AMZN
+Microsoft-MSFT
+Nio Limited-NIO
+Nvidia-NVDA
+Moderna-MRNA
+Nikola-NKLA
+Adobe-ADBE
+Alphabeth A-GOOGL
+Cisco Inc.-CSCO
+Ebay Inc.-EBAY
+Intel Corp.-INTC
+Naked Brand Group Limited-NAKD
+The Goldman Sachs Group, Inc.-GS
+Snap Inc.-SNAP
+Ford Motor Company-F
+AT&T Inc.-T
+Pfizer Inc.-PFE
+Citigroup Inc.-C
+Facebook, Inc.-FB
+Norwegian Cruise Line Holdings Ltd.-NCLH
+Pinterest, Inc.-PINS
+Twitter, Inc.-TWTR
+United Airlines Holdings, Inc.-UAL
+JPMorgan Chase & Co.-JPM
+Morgan Stanley-MS
+The Boeing Company-BA
+Barclays PLC-BCS
+UP Fintech Holding Limited-TIGR
+QuantumScape Corporation-QS
