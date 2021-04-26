@@ -18,7 +18,7 @@ class readTickers {
               oneLine.take(1) match {
                 case "#" => oneLine = linesIn.readLine()
                 case _ => {
-                    val split: Seq[String] = oneLine.split('-')
+                    val split: Seq[String] = oneLine.split("->")
                     seqOfTickers = seqOfTickers :+ (split.head, split.last)
                     oneLine = linesIn.readLine()
                 }
