@@ -4,6 +4,8 @@ A stock-screening application created using Scala/SBT/ScalaFX combined with Yaho
 
 The application gathers data from Yahoo Finance API, sorts and visualizes it in a user friendly manner.
 
+The user can analyze the chosen stock, change themes and lots more.
+
 ## Built With
 
   - [Scala](http://www.scala-lang.org/) 2.13.4
@@ -14,7 +16,10 @@ The application gathers data from Yahoo Finance API, sorts and visualizes it in 
 
 ## Examples
 
-To be added.
+Choosing the stocks:![Screenshot_20210717_132659](https://user-images.githubusercontent.com/68393238/126035755-5f84c7dc-91db-42cc-ae81-47e6276a7fdc.png)
+
+Basic visuals:![Screenshot_20210717_132734](https://user-images.githubusercontent.com/68393238/126035786-eb9a1cd7-c2aa-4d45-a4cc-d3c957fd4a5c.png)
+
 
 ## Prerequisites
 
